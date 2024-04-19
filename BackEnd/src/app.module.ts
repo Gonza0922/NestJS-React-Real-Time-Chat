@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { WebSocketsModule } from './websockets/websockets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { MessagesController } from './messages/messages.controller';
+import { MessagesService } from './messages/messages.service';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -13,10 +16,11 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.USER_DB,
       password: process.env.PASSWORD_DB,
       database: process.env.NAME_DB,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], //*TODO nuestra ruta + /carpeta/archuvo.entity.ts o js lo crea como tabla
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     WebSocketsModule,
+    MessagesModule,
   ],
 })
 export class AppModule {}
