@@ -23,7 +23,8 @@ export class WebSocketsGateway
   }
   @SubscribeMessage("message")
   handleMessage(@ConnectedSocket() client:Socket, @MessageBody() data:string) {
-    const finalData =  {receiver: client.id.slice(0,6) + ": ", content: data}
+    // const finalData =  {person: client.id.slice(0,6), content: data}
+    const finalData =  {person: "Anonimus", content: data}
     console.log(finalData);
     client.broadcast.emit("message", finalData)
   }
