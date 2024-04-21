@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { WebSocketsModule } from './websockets/websockets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { MessagesModule } from './messages/messages.module';
@@ -17,7 +16,6 @@ import { MessagesModule } from './messages/messages.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    WebSocketsModule,
     MessagesModule,
   ],
 })
