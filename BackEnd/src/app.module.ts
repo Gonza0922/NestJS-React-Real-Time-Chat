@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { MessagesModule } from './messages/messages.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,6 +21,12 @@ import { UsersModule } from './users/users.module';
     }),
     MessagesModule,
     UsersModule,
+    AuthModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.TOKEN_SECURE,
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
 })
 export class AppModule {}
