@@ -1,4 +1,4 @@
-import axios from "./axios.js";
+import axios from "./axios.ts";
 import { CreateMessageDto } from "../../../BackEnd/src/messages/messages.dto.ts";
 
 export const getAllMessagesRequest = async () => {
