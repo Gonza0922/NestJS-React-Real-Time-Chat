@@ -11,7 +11,8 @@ export class UsersService {
   getAllUsers() {
     return this.userRespository.find();
   }
-  getUser(user_ID: number) {
-    return this.userRespository.find({ where: { user_ID } });
+  async getUser(user_ID: number) {
+    const findUser = await this.userRespository.find({ where: { user_ID } });
+    return findUser[0];
   }
 }
