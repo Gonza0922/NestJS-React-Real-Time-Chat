@@ -27,6 +27,10 @@ export class AuthController {
   loginUser(@Res() res: Response, @Body() user: LoginUserDto) {
     return this.authService.signIn(res, user);
   }
+  @Post('/logout')
+  logoutUser(@Res() res: Response) {
+    return this.authService.signOut(res);
+  }
   @Get('/verify')
   @UseGuards(AuthGuard)
   verifyUser(@Req() req: any) {

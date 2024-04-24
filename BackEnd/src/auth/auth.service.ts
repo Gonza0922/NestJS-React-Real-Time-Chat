@@ -44,4 +44,9 @@ export class AuthService {
     res.cookie('UserToken', UserToken);
     throw new HttpException(findUser[0], HttpStatus.OK);
   }
+
+  async signOut(res: Response) {
+    res.cookie('UserToken', '', { expires: new Date(0) });
+    throw new HttpException('Disconnected', HttpStatus.OK);
+  }
 }
