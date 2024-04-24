@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
 import { LoginUserDto, RegisterUserDto } from '../users/users.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     @InjectRepository(User) private userRespository: Repository<User>,
   ) {}
 
-  async signUp(newUser: RegisterUserDto) {
+  async signUp(res: Response, newUser: RegisterUserDto) {
     const { email, password } = newUser;
     const findEmail = await this.userRespository.find({ where: { email } });
     if (findEmail.length > 0)
@@ -25,11 +26,12 @@ export class AuthService {
     });
     const userSaved = await this.userRespository.save(userCreated);
     const payload = { user_ID: userSaved.user_ID };
-    const token = await this.jwtService.signAsync(payload);
-    throw new HttpException({ ...userSaved, token }, HttpStatus.CREATED);
+    const UserToken = await this.jwtService.signAsync(payload);
+    res.cookie('UserToken', UserToken);
+    throw new HttpException(userSaved, HttpStatus.CREATED);
   }
 
-  async signIn(user: LoginUserDto) {
+  async signIn(res: Response, user: LoginUserDto) {
     const { email, password } = user;
     const findUser = await this.userRespository.find({ where: { email } });
     if (findUser.length === 0)
@@ -38,7 +40,8 @@ export class AuthService {
     if (!isMatch)
       throw new HttpException('Incorrect Password', HttpStatus.BAD_REQUEST);
     const payload = { user_ID: findUser[0].user_ID };
-    const token = await this.jwtService.signAsync(payload);
-    throw new HttpException({ ...findUser[0], token }, HttpStatus.OK);
+    const UserToken = await this.jwtService.signAsync(payload);
+    res.cookie('UserToken', UserToken);
+    throw new HttpException(findUser[0], HttpStatus.OK);
   }
 }
