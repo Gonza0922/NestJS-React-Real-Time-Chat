@@ -4,15 +4,18 @@ import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import UserProvider from "./contexts/UserContext";
 import Register from "./pages/Register";
+import UserProtected from "./components/UserProtected";
 
 function App() {
   return (
     <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Chat />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route element={<UserProtected />}>
+            <Route path="/users/:name" element={<Chat />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
