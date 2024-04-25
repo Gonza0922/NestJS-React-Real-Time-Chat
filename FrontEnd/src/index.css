@@ -1,9 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: rgba(0, 0, 0, 0.87); 
+  background-color: rgba(0, 0, 0, 0.87);
   color: white;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #root {
@@ -15,6 +15,85 @@ body {
   align-items: center;
 }
 
+/* ERRORS */
+
+.container-span {
+  color: red;
+}
+
+.error {
+  text-align: center;
+  background-color: red;
+  color: white;
+  padding: 10px;
+}
+
+/* LOGIN AND REGISTER*/
+
+.form-login-register {
+  width: 400px;
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.title-login-register {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.row-input {
+  margin: 20px 10px;
+}
+
+.input-field {
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.validate {
+  background-color: transparent;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-bottom: 1px solid grey;
+  outline: none;
+  border-radius: 0px;
+  padding: 10px 5px;
+  margin: 10px 0px;
+}
+
+.linkTo-login-register-span {
+  text-align: left;
+  margin: 10px 0px;
+}
+
+.linkTo-login-register {
+  color: #34606d;
+}
+
+.container-button-login-register {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.button-login-register {
+  background-color: #2bcdff;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.button-login-register:hover {
+  background-color: #23a9d1;
+}
+
+/* CHAT */
+
 .navbar {
   padding: 20px;
   background-color: rgb(88, 88, 88);
@@ -23,7 +102,7 @@ body {
 }
 
 .container {
- border: 1px solid grey;
+  border: 1px solid grey;
 }
 
 .screen {
@@ -48,7 +127,7 @@ body {
   height: 20px;
 }
 
-form {
+.chat-form {
   width: 400px;
   padding: 5px 18px;
   border-top: 1px solid grey;
@@ -57,7 +136,7 @@ form {
   align-items: center;
 }
 
-input {
+.input-chat {
   width: 65%;
   padding: 8px;
   outline: none;
@@ -69,7 +148,7 @@ input {
   font-size: 18px;
 }
 
-button {
+.button-chat {
   background-color: #2bcdff;
   border: none;
   padding: 10px 10px;
@@ -80,11 +159,11 @@ button {
   font-size: 15px;
 }
 
-button:hover {
+.button-chat:hover {
   background-color: #23a9d1;
 }
 
-.right{
+.right {
   max-width: 85%;
   float: right;
   margin: 10px 0px;
@@ -96,7 +175,7 @@ button:hover {
   font-size: 18px;
 }
 
-.left{
+.left {
   max-width: 85%;
   float: left;
   margin: 10px 0px;
@@ -116,4 +195,13 @@ button:hover {
 
 .content {
   margin: 0;
+}
+
+/* NOT FOUND */
+
+.not-found {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 10px;
 }

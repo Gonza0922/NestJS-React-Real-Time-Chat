@@ -60,8 +60,9 @@ function Chat() {
         )}
       </div>
       <div className="space"></div>
-      <form onSubmit={handleSubmit}>
+      <form className="chat-form" onSubmit={handleSubmit}>
         <input
+          className="input-chat"
           id="input"
           value={text}
           type="text"
@@ -70,7 +71,7 @@ function Chat() {
           spellCheck
           autoComplete="off"
         />
-        <button>Send</button>
+        <button className="button-chat">Send</button>
       </form>
     </div>
   );
