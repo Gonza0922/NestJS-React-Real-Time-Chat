@@ -3,6 +3,7 @@ import NotFound from "./pages/NotFound";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import UserProvider from "./contexts/UserContext";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route index element={<Chat />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

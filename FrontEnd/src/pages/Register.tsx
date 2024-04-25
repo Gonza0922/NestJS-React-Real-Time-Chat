@@ -2,39 +2,55 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../contexts/UserContext";
-import { LoginData } from "../interfaces/user.interface";
+import { RegisterData } from "../interfaces/user.interface";
 
-export function Login() {
-  const { user, setUser, login, isAuthenticated, error } = useUserContext();
+export function Register() {
+  const { user, isAuthenticated, signUp, error } = useUserContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>();
+  } = useForm<RegisterData>();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) navigate(`/users/${user.name}`);
+    if (isAuthenticated) {
+      const timer = setTimeout(() => {
+        navigate(`/users/${user.name}`);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit((data) => {
-    login(data);
-    setUser(data);
+    signUp(data);
   });
 
   return (
     <>
       <form className="form-login-register" onSubmit={onSubmit}>
-        <h1 className="title-login-register">Login</h1>
+        <h1 className="title-login-register">Register</h1>
         <div className="container-errors">
-          {error === "User not found" ? (
-            <div className="error">{error}</div>
-          ) : error === "Incorrect Password" ? (
-            <div className="error">{error}</div>
-          ) : (
-            <div></div>
-          )}
+          {error === "Email already exists" ? <div className="error">{error}</div> : <div></div>}
+        </div>
+        <div className="row-input">
+          <div className="input-field">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              className="validate"
+              autoComplete="off"
+              spellCheck={false}
+              {...register("name", {
+                required: { value: true, message: "Name is required" },
+              })}
+            />
+            <div className="container-span">
+              {errors.name && <span>{errors.name.message}</span>}
+            </div>
+          </div>
         </div>
         <div className="row-input">
           <div className="input-field">
@@ -76,14 +92,14 @@ export function Login() {
             </div>
           </div>
           <div className="linkTo-login-register-span">
-            <span>Need an entity account? </span>
-            <Link className="linkTo-login-register" to="/register">
-              Sign Up
+            <span>Already have an account? </span>
+            <Link className="linkTo-login-register" to="/login">
+              Sign In
             </Link>
           </div>
           <div className="container-button-login-register">
             <button type="submit" id="reserve" className="button-login-register">
-              Sign In
+              Sign Up
             </button>
           </div>
         </div>
@@ -92,4 +108,4 @@ export function Login() {
   );
 }
 
-export default Login;
+export default Register;
