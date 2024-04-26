@@ -1,18 +1,15 @@
 import { useState, useEffect, FormEvent } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { getAllMessagesRequest } from "../api/messages.api.ts";
-
-const socket = io("http://localhost:3000");
+import { useUserContext } from "../contexts/UserContext.tsx";
 
 interface message {
   person: string;
   content: string;
 }
 
-function Chat() {
-  const [text, setText] = useState("");
+const useGetAllMessages = () => {
   const [messages, setMessages] = useState<message[]>([]);
-
   useEffect(() => {
     const getAllMessages = async () => {
       const data = await getAllMessagesRequest();
@@ -21,13 +18,25 @@ function Chat() {
     };
     getAllMessages();
   }, []);
+  return { messages, setMessages };
+};
+
+function Chat() {
+  const { user } = useUserContext();
+  const { messages, setMessages } = useGetAllMessages();
+  const [text, setText] = useState("");
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
+    const socket = io("http://localhost:3000", {
+      auth: { userName: user.name },
+    });
+    setSocket(socket);
     socket.on("message", (data: message) => {
       setMessages((state: message[]) => [...state, data]);
     });
     return () => {
-      socket.off("message");
+      socket.close();
     };
   }, []);
 
@@ -35,8 +44,8 @@ function Chat() {
     e.preventDefault();
     if (text.trim()) {
       // no se envian inputs vacios
-      socket.emit("message", text);
-      setMessages([...messages, { person: "Me", content: text }]);
+      if (socket !== null) socket.emit("message", text);
+      setMessages([...messages, { person: user.name, content: text }]);
       setText("");
     }
   };
@@ -46,7 +55,7 @@ function Chat() {
       <nav className="navbar">Real Time Chat</nav>
       <div className="screen">
         {messages.map((message: message, index: number) =>
-          message.person === "Me" ? (
+          message.person === user.name ? (
             <div key={index} className="right">
               <span className="person">{message.person}</span>
               <p className="content">{message.content}</p>
