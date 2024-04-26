@@ -9,6 +9,6 @@ export const getAllMessagesRequest = async () => {
 
 export const postMessagesRequest = async (newData: CreateMessageDto) => {
   //Create a message
-  const request = await axios.put("/messages/post", newData);
+  const request = await axios.post("/messages/post", newData);
   return request.data;
 };
