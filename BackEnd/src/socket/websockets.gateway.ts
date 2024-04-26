@@ -28,9 +28,8 @@ export class WebSocketsGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() data: string,
   ) {
-    // const finalData =  {person: client.id.slice(0,6), content: data}
-    const finalData = { person: 'Anonimus', content: data }; // la person sera el nombre del que haga inicio de sesion
-    console.log(finalData);
+    const { userName } = client.handshake.auth;
+    const finalData = { person: userName, content: data };
     client.broadcast.emit('message', finalData);
     this.messageService.postMessage(finalData);
   }
