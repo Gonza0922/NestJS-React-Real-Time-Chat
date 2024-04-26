@@ -6,7 +6,7 @@ import {
   verifyTokenUserRequest,
 } from "../api/auth.api";
 import Cookie from "js-cookie";
-import { ChildrenType, LoginData, RegisterData } from "../interfaces/user.interface";
+import { ChildrenType, LoginData, RegisterData } from "../interfaces/user.interfaces";
 
 const userContext = createContext<any>(undefined);
 

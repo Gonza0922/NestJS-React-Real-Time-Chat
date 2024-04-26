@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../contexts/UserContext";
-import { RegisterData } from "../interfaces/user.interface";
+import { RegisterData } from "../interfaces/user.interfaces";
 
 export function Register() {
   const { user, isAuthenticated, signUp, error } = useUserContext();

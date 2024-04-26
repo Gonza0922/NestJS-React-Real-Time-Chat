@@ -1,25 +1,8 @@
 import { useState, useEffect, FormEvent } from "react";
 import io, { Socket } from "socket.io-client";
-import { getAllMessagesRequest } from "../api/messages.api.ts";
 import { useUserContext } from "../contexts/UserContext.tsx";
-
-interface message {
-  person: string;
-  content: string;
-}
-
-const useGetAllMessages = () => {
-  const [messages, setMessages] = useState<message[]>([]);
-  useEffect(() => {
-    const getAllMessages = async () => {
-      const data = await getAllMessagesRequest();
-      console.log(data);
-      setMessages([...messages, ...data]);
-    };
-    getAllMessages();
-  }, []);
-  return { messages, setMessages };
-};
+import { Message } from "../interfaces/message.interfaces.ts";
+import { useGetAllMessages } from "../hooks/messages.hooks.ts";
 
 function Chat() {
   const { user } = useUserContext();
@@ -32,8 +15,8 @@ function Chat() {
       auth: { userName: user.name },
     });
     setSocket(socket);
-    socket.on("message", (data: message) => {
-      setMessages((state: message[]) => [...state, data]);
+    socket.on("message", (data: Message) => {
+      setMessages((state: Message[]) => [...state, data]);
     });
     return () => {
       socket.close();
@@ -54,7 +37,7 @@ function Chat() {
     <div className="container">
       <nav className="navbar">Real Time Chat</nav>
       <div className="screen">
-        {messages.map((message: message, index: number) =>
+        {messages.map((message: Message, index: number) =>
           message.person === user.name ? (
             <div key={index} className="right">
               <span className="person">{message.person}</span>
