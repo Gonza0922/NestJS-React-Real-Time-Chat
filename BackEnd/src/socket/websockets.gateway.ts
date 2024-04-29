@@ -9,28 +9,31 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from 'src/messages/messages.service';
+import { ClientDto } from './websockets.dto';
 
 @WebSocketGateway({ cors: 'http://localhost:5173' })
-export class WebSocketsGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class WebSocketsGateway implements OnGatewayConnection {
   constructor(private messageService: MessagesService) {}
   @WebSocketServer()
   server: Server;
-  handleConnection(client: Socket) {
-    console.log(`client connected: ${client.id}`);
-  }
-  handleDisconnect(client: Socket) {
-    console.log(`client disconnected: ${client.id}`);
+  private clients: ClientDto[] = [];
+  handleConnection(socket: Socket) {
+    const { userName } = socket.handshake.auth;
+    console.log(`${userName} with id: ${socket.id} is connected `);
+    this.clients.push({ user: userName, id: socket.id });
   }
   @SubscribeMessage('message')
   handleMessage(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() socket: Socket,
     @MessageBody() data: string,
   ) {
-    const { userName } = client.handshake.auth;
+    const { userName, receiver } = socket.handshake.auth;
     const finalData = { person: userName, content: data };
-    client.broadcast.emit('message', finalData);
-    this.messageService.postMessage(finalData);
+    this.clients.forEach((client: ClientDto) => {
+      if (client.user === receiver)
+        this.server.to(client.id).emit('message', finalData);
+    });
+    // client.broadcast.emit('message', finalData); enviar a todos
+    // this.messageService.postMessage(finalData); crear a todos
   }
 }
