@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import io, { Socket } from "socket.io-client";
 import { useUserContext } from "../contexts/UserContext.tsx";
 import { Message } from "../interfaces/message.interfaces.ts";
@@ -9,6 +9,11 @@ function Chat() {
   const { messages, setMessages } = useGetAllMessages();
   const [text, setText] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
+  const scrollRef = useRef<any>(null);
+
+  useEffect(() => {
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages]);
 
   useEffect(() => {
     const socket = io("http://localhost:3000", {
@@ -36,7 +41,7 @@ function Chat() {
   return (
     <div className="container">
       <nav className="navbar">Real Time Chat</nav>
-      <div className="screen">
+      <div className="screen" ref={scrollRef}>
         {messages.map((message: Message, index: number) =>
           message.person === user.name ? (
             <div key={index} className="right">
