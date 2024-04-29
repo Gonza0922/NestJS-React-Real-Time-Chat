@@ -5,7 +5,7 @@ import { Message } from "../interfaces/message.interfaces.ts";
 import { useGetAllMessages } from "../hooks/messages.hooks.ts";
 
 function Chat() {
-  const { user } = useUserContext();
+  const { user, logout } = useUserContext();
   const { messages, setMessages } = useGetAllMessages();
   const [text, setText] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -39,38 +39,45 @@ function Chat() {
   };
 
   return (
-    <div className="container">
-      <nav className="navbar">Real Time Chat</nav>
-      <div className="screen" ref={scrollRef}>
-        {messages.map((message: Message, index: number) =>
-          message.person === user.name ? (
-            <div key={index} className="right">
-              <span className="person">{message.person}</span>
-              <p className="content">{message.content}</p>
-            </div>
-          ) : (
-            <div key={index} className="left">
-              <span className="person">{message.person}</span>
-              <p className="content">{message.content}</p>
-            </div>
-          )
-        )}
+    <>
+      <nav className="navbar">
+        <h1>Real Time Chat</h1>
+        <button className="button-logout" onClick={logout}>
+          Logout
+        </button>
+      </nav>
+      <div className="container">
+        <nav className="navbar-chat">Chat</nav>
+        <div className="screen" ref={scrollRef}>
+          {messages.map((message: Message, index: number) =>
+            message.person === user.name ? (
+              <div key={index} className="right">
+                <span className="person">{message.person}</span>
+                <p className="content">{message.content}</p>
+              </div>
+            ) : (
+              <div key={index} className="left">
+                <span className="person">{message.person}</span>
+                <p className="content">{message.content}</p>
+              </div>
+            )
+          )}
+        </div>
+        <form className="chat-form" onSubmit={handleSubmit}>
+          <input
+            className="input-chat"
+            id="input"
+            value={text}
+            type="text"
+            onChange={(e) => setText(e.target.value)}
+            autoFocus
+            spellCheck
+            autoComplete="off"
+          />
+          <button className="button-chat">Send</button>
+        </form>
       </div>
-      <div className="space"></div>
-      <form className="chat-form" onSubmit={handleSubmit}>
-        <input
-          className="input-chat"
-          id="input"
-          value={text}
-          type="text"
-          onChange={(e) => setText(e.target.value)}
-          autoFocus
-          spellCheck
-          autoComplete="off"
-        />
-        <button className="button-chat">Send</button>
-      </form>
-    </div>
+    </>
   );
 }
 
