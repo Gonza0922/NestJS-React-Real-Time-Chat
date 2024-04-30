@@ -12,7 +12,9 @@ import { MessagesService } from 'src/messages/messages.service';
 import { ClientDto } from './websockets.dto';
 
 @WebSocketGateway({ cors: 'http://localhost:5173' })
-export class WebSocketsGateway implements OnGatewayConnection {
+export class WebSocketsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(private messageService: MessagesService) {}
   @WebSocketServer()
   server: Server;
@@ -21,6 +23,9 @@ export class WebSocketsGateway implements OnGatewayConnection {
     const { userName } = socket.handshake.auth;
     console.log(`${userName} with id: ${socket.id} is connected `);
     this.clients.push({ user: userName, id: socket.id });
+  }
+  handleDisconnect(socket: Socket) {
+    console.log(`${socket.id} Disconnected`);
   }
   @SubscribeMessage('message')
   handleMessage(
@@ -34,6 +39,6 @@ export class WebSocketsGateway implements OnGatewayConnection {
         this.server.to(client.id).emit('message', finalData);
     });
     // client.broadcast.emit('message', finalData); enviar a todos
-    // this.messageService.postMessage(finalData); crear a todos
+    this.messageService.postMessage({ ...finalData, receiver });
   }
 }

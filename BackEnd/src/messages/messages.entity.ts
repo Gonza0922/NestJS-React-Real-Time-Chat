@@ -10,4 +10,6 @@ export class Message {
   content: string;
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+  @Column()
+  receiver: string;
 }
