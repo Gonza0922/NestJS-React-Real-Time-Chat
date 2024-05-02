@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from './messages.entity';
 import { Repository } from 'typeorm';
-import { CreateMessageDto } from './messages.dto';
+import { CreateMessageDto, person } from './messages.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -14,11 +14,14 @@ export class MessagesService {
   getAllMessages() {
     return this.messageRespository.find();
   }
-  async getMessagesReceiver(user_ID: number, receiver: string) {
-    // el req es el enviador y param es el recibidor
-    const findUser = await this.usersService.getUser(user_ID);
+  async getMessagesByReceiver(authName: person, receiver: string) {
+    // el body es el enviador y param es el recibidor
+    const user = await this.usersService.getUserByPassword(authName.person);
     return this.messageRespository.find({
-      where: { person: findUser.name, receiver },
+      where: [
+        { person: user.name, receiver },
+        { person: receiver, receiver: user.name },
+      ],
     });
   }
   postMessage(message: CreateMessageDto) {

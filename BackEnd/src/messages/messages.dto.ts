@@ -3,3 +3,7 @@ export interface CreateMessageDto {
   content: string;
   receiver: string;
 }
+
+export interface person {
+  person: string;
+}

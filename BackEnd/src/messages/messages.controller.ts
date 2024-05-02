@@ -1,34 +1,27 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MessagesService } from './messages.service';
-import { CreateMessageDto } from './messages.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateMessageDto, person } from './messages.dto';
 
 @Controller('messages')
 export class MessagesController {
   constructor(private messagesService: MessagesService) {}
   @Get('/getAll')
-  getAllMessages() {
+  getAllMessagesEndpoint() {
     return this.messagesService.getAllMessages();
   }
-  @UseGuards(AuthGuard)
-  @Get('/get/:receiver')
-  getMessagesReceiver(@Req() req: any, @Param() param: object) {
-    // el req es el enviador y param es el recibidor
-    return this.messagesService.getMessagesReceiver(
-      req.user.user_ID,
+  @Post('/post/:receiver')
+  getMessagesByReceiverEndpoint(
+    @Body() authName: person,
+    @Param() param: object,
+  ) {
+    // el body es el enviador y param es el recibidor
+    return this.messagesService.getMessagesByReceiver(
+      authName,
       param['receiver'],
     );
   }
   @Post('/post')
-  createMessage(@Body() newMessage: CreateMessageDto) {
+  createMessageEndpoint(@Body() newMessage: CreateMessageDto) {
     return this.messagesService.postMessage(newMessage);
   }
 }
