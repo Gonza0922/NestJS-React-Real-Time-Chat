@@ -3,30 +3,35 @@ import io, { Socket } from "socket.io-client";
 import { useUserContext } from "../contexts/UserContext.tsx";
 import { Message } from "../interfaces/message.interfaces.ts";
 import { useGetAllMessages } from "../hooks/messages.hooks.ts";
+import { useGetAllUsers } from "../hooks/users.hooks.ts";
 
 function Chat() {
   const { user, logout } = useUserContext();
+  const { users } = useGetAllUsers(user.name);
+  const [userToSend, setUserToSend] = useState<string>("none");
   const { messages, setMessages } = useGetAllMessages();
   const [text, setText] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
-  const scrollRef = useRef<any>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollRef.current !== null) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
 
   useEffect(() => {
     const socket = io("http://localhost:3000", {
-      auth: { userName: user.name },
+      auth: { userName: user.name, receiver: userToSend },
     });
     setSocket(socket);
-    socket.on("message", (data: Message) => {
-      setMessages((state: Message[]) => [...state, data]);
-    });
-    return () => {
-      socket.close();
-    };
-  }, []);
+    if (socket !== null) {
+      socket.on("message", (data: Message) => {
+        setMessages((state: Message[]) => [...state, data]);
+      });
+      return () => {
+        socket.close();
+      };
+    }
+  }, [userToSend]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,8 +51,18 @@ function Chat() {
           Logout
         </button>
       </nav>
+      <div className="chats-panel">
+        <nav className="chats-navbar">Real Time Chat</nav>
+        <div className="chats" ref={scrollRef}>
+          {users.map((user: any, index: number) => (
+            <div key={index} className="sender-chat" onClick={() => setUserToSend(user.name)}>
+              <span className="sender-chat-span">{user.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="container">
-        <nav className="navbar-chat">Chat</nav>
+        <nav className="navbar-chat">{userToSend}</nav>
         <div className="screen" ref={scrollRef}>
           {messages.map((message: Message, index: number) =>
             message.sender === user.name ? (
