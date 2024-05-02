@@ -55,46 +55,59 @@ function Chat() {
         </button>
       </nav>
       <div className="chats-panel">
-        <nav className="chats-navbar">Real Time Chat</nav>
+        <nav className="chats-navbar">Chats</nav>
         <div className="chats" ref={scrollRef}>
           {users.map((user: any, index: number) => (
-            <div key={index} className="sender-chat" onClick={() => setUserToSend(user.name)}>
+            <div
+              key={index}
+              className={`sender-chat ${userToSend === user.name ? "selected" : ""}`}
+              onClick={() => setUserToSend(user.name)}
+            >
               <span className="sender-chat-span">{user.name}</span>
             </div>
           ))}
         </div>
       </div>
-      <div className="container">
-        <nav className="navbar-chat">{userToSend}</nav>
-        <div className="screen" ref={scrollRef}>
-          {messages.map((message: Message, index: number) =>
-            message.sender === user.name ? (
-              <div key={index} className="right">
-                <span className="sender">{message.sender}</span>
-                <p className="content">{message.content}</p>
-              </div>
-            ) : (
-              <div key={index} className="left">
-                <span className="sender">{message.sender}</span>
-                <p className="content">{message.content}</p>
-              </div>
-            )
-          )}
+      {userToSend !== "none" ? (
+        <div className="container">
+          <nav className="navbar-chat">{userToSend}</nav>
+          <div className="screen" ref={scrollRef}>
+            {messages.map((message: Message, index: number) =>
+              message.sender === user.name ? (
+                <div key={index} className="right">
+                  <span className="sender">{message.sender}</span>
+                  <p className="content">{message.content}</p>
+                </div>
+              ) : (
+                <div key={index} className="left">
+                  <span className="sender">{message.sender}</span>
+                  <p className="content">{message.content}</p>
+                </div>
+              )
+            )}
+          </div>
+          <form className="chat-form" onSubmit={handleSubmit}>
+            <input
+              className="input-chat"
+              id="input"
+              value={text}
+              type="text"
+              onChange={(e) => setText(e.target.value)}
+              autoFocus
+              spellCheck
+              autoComplete="off"
+            />
+            <button className="button-chat">Send</button>
+          </form>
         </div>
-        <form className="chat-form" onSubmit={handleSubmit}>
-          <input
-            className="input-chat"
-            id="input"
-            value={text}
-            type="text"
-            onChange={(e) => setText(e.target.value)}
-            autoFocus
-            spellCheck
-            autoComplete="off"
-          />
-          <button className="button-chat">Send</button>
-        </form>
-      </div>
+      ) : (
+        <div className="container-none">
+          <div>
+            <h2>Welcome {user.name}</h2>
+            <h2>Select a chat to start messaging</h2>
+          </div>
+        </div>
+      )}
     </>
   );
 }
