@@ -9,7 +9,10 @@ function Chat() {
   const { user, logout } = useUserContext();
   const { users } = useGetAllUsers(user.name);
   const [userToSend, setUserToSend] = useState<string>("none");
-  const { messages, setMessages } = useGetAllMessages();
+  const { messages, setMessages } = useGetAllMessages(
+    userToSend,
+    sessionStorage.getItem("token")
+  );
   const [text, setText] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);

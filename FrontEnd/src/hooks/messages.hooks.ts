@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { getAllMessagesRequest } from "../api/messages.api";
+import { getMessagesReceiverRequest } from "../api/messages.api";
 import { Message } from "../interfaces/message.interfaces";
 
-export const useGetAllMessages = () => {
+export const useGetAllMessages = (receiver: string, authName: string | null) => {
   const [messages, setMessages] = useState<Message[]>([]);
   useEffect(() => {
-    const getAllMessages = async () => {
-      const data = await getAllMessagesRequest();
-      console.log(data);
-      setMessages([...messages, ...data]);
+    setMessages([]);
+    const getMessagesReceiver = async () => {
+      const data = await getMessagesReceiverRequest(receiver, { sender: authName });
+      setMessages((prevMessages) => [...prevMessages, ...data]);
     };
-    getAllMessages();
-  }, []);
+    getMessagesReceiver();
+  }, [receiver]);
   return { messages, setMessages };
 };

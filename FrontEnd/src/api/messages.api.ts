@@ -7,6 +7,12 @@ export const getAllMessagesRequest = async () => {
   return request.data;
 };
 
+export const getMessagesReceiverRequest = async (receiver: string, authName: object) => {
+  //Select all messages from a sender and receiver
+  const request = await axios.post(`/messages/post/${receiver}`, authName);
+  return request.data;
+};
+
 export const postMessagesRequest = async (newData: Message) => {
   //Create a message
   const request = await axios.post("/messages/post", newData);
