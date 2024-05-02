@@ -1,12 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import {
-  registerUserRequest,
-  loginUserRequest,
-  logoutUserRequest,
-  verifyTokenUserRequest,
-} from "../api/auth.api";
-import Cookie from "js-cookie";
+import { registerUserRequest, loginUserRequest, logoutUserRequest } from "../api/auth.api";
 import { ChildrenType, LoginData, RegisterData } from "../interfaces/user.interfaces";
+import { getUserPasswordRequest } from "../api/users.api";
 
 const userContext = createContext<any>(undefined);
 
@@ -34,6 +29,7 @@ const UserProvider = (props: ChildrenType) => {
       setUser(data);
       setIsAuthenticated(true);
       console.log(data);
+      sessionStorage.setItem("token", data.password);
     } catch (error: any) {
       console.log(error);
       const e = error.response.data;
@@ -47,6 +43,7 @@ const UserProvider = (props: ChildrenType) => {
       setUser(data);
       setIsAuthenticated(true);
       console.log(data);
+      sessionStorage.setItem("token", data.password);
     } catch (error: any) {
       console.log(error);
       const e = error.response.data;
@@ -57,9 +54,9 @@ const UserProvider = (props: ChildrenType) => {
   const logout = async () => {
     try {
       await logoutUserRequest();
-      Cookie.remove("token");
       setUser({});
       setIsAuthenticated(false);
+      sessionStorage.removeItem("token");
     } catch (error) {
       console.log(error);
     }
@@ -67,14 +64,13 @@ const UserProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     const verify = async () => {
-      const cookies = Cookie.get();
-      if (!cookies.UserToken) return setIsAuthenticated(false);
+      const session = sessionStorage.getItem("token");
+      if (!session) return setIsAuthenticated(false);
+      if (session.length !== 60) return setIsAuthenticated(false);
       try {
-        const user = await verifyTokenUserRequest();
-        console.log(user);
-        if (!user) return setIsAuthenticated(false);
+        const property = await getUserPasswordRequest(session);
+        setUser({ ...user, name: property.name });
         setIsAuthenticated(true);
-        setUser(user);
       } catch (error) {
         setIsAuthenticated(false);
         console.log(error);

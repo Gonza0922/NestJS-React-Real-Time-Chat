@@ -14,6 +14,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<UserProtected />}>
+            <Route path="/users/undefined" element={<h1>I got you Hacker</h1>} />
             <Route index element={<Chat />} />
             <Route path="/users/:name" element={<Chat />} />
           </Route>
