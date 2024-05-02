@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MessagesService } from './messages.service';
-import { CreateMessageDto, person } from './messages.dto';
+import { CreateMessageDto, sender } from './messages.dto';
 
 @Controller('messages')
 export class MessagesController {
@@ -11,7 +11,7 @@ export class MessagesController {
   }
   @Post('/post/:receiver')
   getMessagesByReceiverEndpoint(
-    @Body() authName: person,
+    @Body() authName: sender,
     @Param() param: object,
   ) {
     // el body es el enviador y param es el recibidor

@@ -33,7 +33,7 @@ function Chat() {
     if (text.trim()) {
       // no se envian inputs vacios
       if (socket !== null) socket.emit("message", text);
-      setMessages([...messages, { person: user.name, content: text }]);
+      setMessages([...messages, { sender: user.name, content: text }]);
       setText("");
     }
   };
@@ -50,14 +50,14 @@ function Chat() {
         <nav className="navbar-chat">Chat</nav>
         <div className="screen" ref={scrollRef}>
           {messages.map((message: Message, index: number) =>
-            message.person === user.name ? (
+            message.sender === user.name ? (
               <div key={index} className="right">
-                <span className="person">{message.person}</span>
+                <span className="sender">{message.sender}</span>
                 <p className="content">{message.content}</p>
               </div>
             ) : (
               <div key={index} className="left">
-                <span className="person">{message.person}</span>
+                <span className="sender">{message.sender}</span>
                 <p className="content">{message.content}</p>
               </div>
             )

@@ -5,7 +5,7 @@ export class Message {
   @PrimaryGeneratedColumn()
   message_ID: number;
   @Column()
-  person: string;
+  sender: string;
   @Column()
   content: string;
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })

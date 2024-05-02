@@ -15,7 +15,7 @@ export class UsersService {
     const findUser = await this.userRespository.find({ where: { user_ID } });
     return findUser[0];
   }
-  async getUserPassword(password: string) {
+  async getUserByPassword(password: string) {
     const findUser = await this.userRespository.find({ where: { password } });
     return findUser[0];
   }

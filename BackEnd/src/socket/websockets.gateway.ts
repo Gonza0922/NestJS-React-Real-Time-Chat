@@ -33,7 +33,7 @@ export class WebSocketsGateway
     @MessageBody() data: string,
   ) {
     const { userName, receiver } = socket.handshake.auth;
-    const finalData = { person: userName, content: data };
+    const finalData = { sender: userName, content: data };
     this.clients.forEach((client: ClientDto) => {
       if (client.user === receiver)
         this.server.to(client.id).emit('message', finalData);

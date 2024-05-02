@@ -1,9 +1,9 @@
 export interface CreateMessageDto {
-  person: string;
+  sender: string;
   content: string;
   receiver: string;
 }
 
-export interface person {
-  person: string;
+export interface sender {
+  sender: string;
 }
