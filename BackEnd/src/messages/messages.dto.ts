@@ -1,7 +1,7 @@
 export interface CreateMessageDto {
-  sender: string;
+  sender: number;
   content: string;
-  receiver: string;
+  receiver: number;
 }
 
 export interface sender {

@@ -13,6 +13,10 @@ export class UsersController {
   getUserEndpoint(@Param() param: object) {
     return this.userService.getUser(param['user_ID']);
   }
+  @Get('/user_ID/get/:name')
+  getUserByNameEndpoint(@Param() param: object) {
+    return this.userService.getUserByName(param['name']);
+  }
   @Post('/post/password')
   getUserByPasswordEndpoint(@Body() hash: Password) {
     return this.userService.getUserByPassword(hash.password);

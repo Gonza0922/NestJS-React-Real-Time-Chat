@@ -69,7 +69,7 @@ const UserProvider = (props: ChildrenType) => {
       if (session.length !== 60) return setIsAuthenticated(false);
       try {
         const property = await getUserPasswordRequest(session);
-        setUser({ ...user, name: property.name });
+        setUser(property);
         setIsAuthenticated(true);
       } catch (error) {
         setIsAuthenticated(false);

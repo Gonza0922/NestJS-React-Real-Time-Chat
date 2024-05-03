@@ -7,7 +7,13 @@ export const useGetAllMessages = (receiver: string, authName: string | null) => 
   useEffect(() => {
     setMessages([]);
     const getMessagesReceiver = async () => {
-      const data = await getMessagesReceiverRequest(receiver, { sender: authName });
+      let data = await getMessagesReceiverRequest(receiver, { sender: authName });
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          data[i].sender = data[i].sender.name;
+          data[i].receiver = data[i].receiver.name;
+        }
+      }
       setMessages((prevMessages) => [...prevMessages, ...data]);
     };
     getMessagesReceiver();

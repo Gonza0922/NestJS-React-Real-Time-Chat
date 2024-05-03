@@ -1,15 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from 'src/users/users.entity';
 
 @Entity({ name: 'messages' })
 export class Message {
   @PrimaryGeneratedColumn()
   message_ID: number;
-  @Column()
-  sender: string;
+  @ManyToOne(() => User, (user) => user.user_ID)
+  sender: number;
   @Column()
   content: string;
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  @Column()
-  receiver: string;
+  @ManyToOne(() => User, (user) => user.user_ID)
+  receiver: number;
 }

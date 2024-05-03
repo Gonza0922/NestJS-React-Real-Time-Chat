@@ -4,6 +4,7 @@ import { useUserContext } from "../contexts/UserContext.tsx";
 import { Message } from "../interfaces/message.interfaces.ts";
 import { useGetAllMessages } from "../hooks/messages.hooks.ts";
 import { useGetAllUsers } from "../hooks/users.hooks.ts";
+import { RegisterData } from "../interfaces/user.interfaces.ts";
 
 function Chat() {
   const { user, logout } = useUserContext();
@@ -23,7 +24,7 @@ function Chat() {
 
   useEffect(() => {
     const socket = io("http://localhost:3000", {
-      auth: { userName: user.name, receiver: userToSend },
+      auth: { userName: user.user_ID, receiver: userToSend },
     });
     setSocket(socket);
     if (socket !== null) {
@@ -57,7 +58,7 @@ function Chat() {
       <div className="chats-panel">
         <nav className="chats-navbar">Chats</nav>
         <div className="chats" ref={scrollRef}>
-          {users.map((user: any, index: number) => (
+          {users.map((user: RegisterData, index: number) => (
             <div
               key={index}
               className={`sender-chat ${userToSend === user.name ? "selected" : ""}`}
