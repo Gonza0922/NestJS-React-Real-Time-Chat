@@ -301,6 +301,15 @@ body {
   margin: 0;
 }
 
+.hour {
+  color: grey;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateY(8px);
+  float: right;
+  margin-left: 8px;
+}
+
 /* NOT FOUND */
 
 .not-found {

@@ -19,6 +19,10 @@ function Chat() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
+  useEffect(() => {
     if (scrollRef.current !== null) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
 
@@ -37,12 +41,23 @@ function Chat() {
     }
   }, [userToSend]);
 
+  const getHours = (dateISO: string) => {
+    const date = new Date(dateISO);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedHours = hours < 10 ? "0" + hours : hours;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return formattedHours + ":" + formattedMinutes;
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.trim()) {
       // no se envian inputs vacios
       if (socket !== null) socket.emit("message", text);
-      setMessages([...messages, { sender: user.name, content: text }]);
+      const date = new Date();
+      const dateISO = date.toISOString();
+      setMessages([...messages, { sender: user.name, content: text, createdAt: dateISO }]);
       setText("");
     }
   };
@@ -77,12 +92,18 @@ function Chat() {
               message.sender === user.name ? (
                 <div key={index} className="right">
                   <span className="sender">{message.sender}</span>
-                  <p className="content">{message.content}</p>
+                  <p className="content">
+                    {message.content}
+                    <span className="hour">{getHours(message.createdAt)}</span>
+                  </p>
                 </div>
               ) : (
                 <div key={index} className="left">
                   <span className="sender">{message.sender}</span>
-                  <p className="content">{message.content}</p>
+                  <p className="content">
+                    {message.content}
+                    <span className="hour">{getHours(message.createdAt)}</span>
+                  </p>
                 </div>
               )
             )}
