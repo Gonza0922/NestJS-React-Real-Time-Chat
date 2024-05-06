@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Password } from './users.dto';
 
@@ -10,12 +17,12 @@ export class UsersController {
     return this.userService.getAllUsers();
   }
   @Get('/get/:user_ID')
-  getUserEndpoint(@Param() param: object) {
-    return this.userService.getUser(param['user_ID']);
+  getUserEndpoint(@Param('user_ID', ParseIntPipe) user_ID: number) {
+    return this.userService.getUser(user_ID);
   }
   @Get('/user_ID/get/:name')
-  getUserByNameEndpoint(@Param() param: object) {
-    return this.userService.getUserByName(param['name']);
+  getUserByNameEndpoint(@Param() name: string) {
+    return this.userService.getUserByName(name);
   }
   @Post('/post/password')
   getUserByPasswordEndpoint(@Body() hash: Password) {

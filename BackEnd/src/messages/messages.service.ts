@@ -15,17 +15,9 @@ export class MessagesService {
     return this.messageRepository.find();
   }
   async getMessagesByReceiver(authName: sender, receiver: string) {
-    // el body es el enviador y param es el recibidor
     if (receiver !== 'none') {
       const user = await this.usersService.getUserByPassword(authName.sender);
       const receiverUser = await this.usersService.getUserByName(receiver);
-      // return this.messageRepository.find({
-      //   relations: ['sender', 'receiver'],
-      //   where: [
-      //     { sender: user.user_ID, receiver: receiverUser.user_ID },
-      //     { sender: receiverUser.user_ID, receiver: user.user_ID },
-      //   ],
-      // });
       const user1Id = user.user_ID;
       const user2Id = receiverUser.user_ID;
       return await this.messageRepository
@@ -40,8 +32,8 @@ export class MessagesService {
         .getMany();
     }
   }
-  postMessage(message: CreateMessageDto) {
-    const newMessage = this.messageRepository.create(message);
-    return this.messageRepository.save(newMessage);
+  postMessage(newMessage: CreateMessageDto) {
+    const newMessageCreated = this.messageRepository.create(newMessage);
+    return this.messageRepository.save(newMessageCreated);
   }
 }

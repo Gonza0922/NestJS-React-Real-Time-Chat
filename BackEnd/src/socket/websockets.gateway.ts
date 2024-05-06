@@ -47,8 +47,6 @@ export class WebSocketsGateway
           .emit('message', { ...finalData, sender: senderUser.name });
       }
     });
-    // client.broadcast.emit('message', finalData); enviar a todos
-    // this.messageService.postMessage({ ...finalData, receiver }); con los nombres
     this.messageService.postMessage({
       ...finalData,
       receiver: receiverUser.user_ID,
