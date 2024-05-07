@@ -185,6 +185,24 @@ body {
   background-color: rgb(83, 83, 83);
 }
 
+.online {
+  background-color: greenyellow;
+  width: 10px;
+  height: 10px;
+  float: right;
+  transform: translateY(10px);
+  border-radius: 50%;
+}
+
+.offline {
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  float: right;
+  transform: translateY(10px);
+  border-radius: 50%;
+}
+
 /* CHAT NONE */
 
 .container-none {

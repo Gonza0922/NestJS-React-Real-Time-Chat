@@ -8,9 +8,10 @@ import { RegisterData } from "../interfaces/user.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 
 function Chat() {
-  const { user, logout } = useUserContext();
+  const { user, logout, isAuthenticated } = useUserContext();
   const { users } = useGetAllUsers(user.name);
   const [userToSend, setUserToSend] = useState<string>("none");
+  const [conectedUsers, setConectedUsers] = useState<any[]>([]);
   const { messages, setMessages } = useGetAllMessages(
     userToSend,
     sessionStorage.getItem("token")
@@ -19,6 +20,19 @@ function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const dateISO = new Date().toISOString();
+
+  useEffect(() => {
+    const socket = io("http://localhost:3000", {
+      auth: { userName: user.user_ID },
+    });
+    setSocket(socket);
+    socket.on("getOnlineUsers", async (names: any) => {
+      setConectedUsers(names);
+    });
+    return () => {
+      socket.close();
+    };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (scrollRef.current !== null) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -68,6 +82,7 @@ function Chat() {
               onClick={() => setUserToSend(user.name)}
             >
               <span className="sender-chat-span">{user.name}</span>
+              <div className={conectedUsers.includes(user.name) ? "online" : "offline"}></div>
             </div>
           ))}
         </div>
