@@ -142,7 +142,6 @@ body {
 
 .chats {
   width: 405px;
-  min-width: 300px;
   height: 700px;
   overflow-y: scroll;
   scroll-behavior: smooth;

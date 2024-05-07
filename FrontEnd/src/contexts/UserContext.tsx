@@ -53,6 +53,7 @@ const UserProvider = (props: ChildrenType) => {
 
   const logout = async () => {
     try {
+      location.reload();
       await logoutUserRequest();
       setUser({});
       setIsAuthenticated(false);

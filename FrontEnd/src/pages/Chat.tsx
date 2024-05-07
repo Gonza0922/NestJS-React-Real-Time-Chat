@@ -1,64 +1,28 @@
 import { useState, useEffect, FormEvent, useRef } from "react";
-import io, { Socket } from "socket.io-client";
 import { useUserContext } from "../contexts/UserContext.tsx";
 import { Message } from "../interfaces/message.interfaces.ts";
-import { useGetAllMessages } from "../hooks/messages.hooks.ts";
 import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
+import { useSocketContext } from "../contexts/SocketContext.tsx";
 
 function Chat() {
-  const { user, logout, isAuthenticated } = useUserContext();
+  const { user, logout } = useUserContext();
+  const { conectedUsers, socket, userToSend, setUserToSend, messages, setMessages, dateISO } =
+    useSocketContext();
   const { users } = useGetAllUsers(user.name);
-  const [userToSend, setUserToSend] = useState<string>("none");
-  const [conectedUsers, setConectedUsers] = useState<any[]>([]);
-  const { messages, setMessages } = useGetAllMessages(
-    userToSend,
-    sessionStorage.getItem("token")
-  );
   const [text, setText] = useState("");
-  const [socket, setSocket] = useState<Socket | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const dateISO = new Date().toISOString();
 
   useEffect(() => {
-    const socket = io("http://localhost:3000", {
-      auth: { userName: user.user_ID },
-    });
-    setSocket(socket);
-    socket.on("getOnlineUsers", async (names: any) => {
-      setConectedUsers(names);
-    });
-    return () => {
-      socket.close();
-    };
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (scrollRef.current !== null) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
-
-  useEffect(() => {
-    const socket = io("http://localhost:3000", {
-      auth: { userName: user.user_ID, receiver: userToSend },
-    });
-    setSocket(socket);
-    if (socket !== null) {
-      socket.on("message", (data: Message) => {
-        data = { ...data, createdAt: dateISO };
-        setMessages((state: Message[]) => [...state, data]);
-      });
-      return () => {
-        socket.close();
-      };
-    }
-  }, [userToSend]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.trim()) {
       // no se envian inputs vacios
-      if (socket !== null) socket.emit("message", text);
+      if (socket) socket.emit("message", text);
       setMessages([...messages, { sender: user.name, content: text, createdAt: dateISO }]);
       setText("");
     }
