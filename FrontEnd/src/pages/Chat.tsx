@@ -94,19 +94,19 @@ function Chat() {
             {messages.map((message: Message, index: number) =>
               message.sender === user.name ? (
                 <div key={index} className="right">
-                  <span className="sender">{message.sender}</span>
-                  <p className="content">
-                    {message.content}
+                  <span className="sender">
+                    {message.sender}
                     <span className="hour">{getDateAndHours(message.createdAt)}</span>
-                  </p>
+                  </span>
+                  <p className="content">{message.content}</p>
                 </div>
               ) : (
                 <div key={index} className="left">
-                  <span className="sender">{message.sender}</span>
-                  <p className="content">
-                    {message.content}
+                  <span className="sender">
+                    {message.sender}
                     <span className="hour">{getDateAndHours(message.createdAt)}</span>
-                  </p>
+                  </span>
+                  <p className="content">{message.content}</p>
                 </div>
               )
             )}
