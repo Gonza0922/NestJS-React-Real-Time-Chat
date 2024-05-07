@@ -5,6 +5,7 @@ import { Message } from "../interfaces/message.interfaces.ts";
 import { useGetAllMessages } from "../hooks/messages.hooks.ts";
 import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
+import { getDateAndHours } from "../functions/getDateAndHours.ts";
 
 function Chat() {
   const { user, logout } = useUserContext();
@@ -17,10 +18,7 @@ function Chat() {
   const [text, setText] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+  const dateISO = new Date().toISOString();
 
   useEffect(() => {
     if (scrollRef.current !== null) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -33,6 +31,7 @@ function Chat() {
     setSocket(socket);
     if (socket !== null) {
       socket.on("message", (data: Message) => {
+        data = { ...data, createdAt: dateISO };
         setMessages((state: Message[]) => [...state, data]);
       });
       return () => {
@@ -41,22 +40,11 @@ function Chat() {
     }
   }, [userToSend]);
 
-  const getHours = (dateISO: string) => {
-    const date = new Date(dateISO);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedHours = hours < 10 ? "0" + hours : hours;
-    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-    return formattedHours + ":" + formattedMinutes;
-  };
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.trim()) {
       // no se envian inputs vacios
       if (socket !== null) socket.emit("message", text);
-      const date = new Date();
-      const dateISO = date.toISOString();
       setMessages([...messages, { sender: user.name, content: text, createdAt: dateISO }]);
       setText("");
     }
@@ -94,7 +82,7 @@ function Chat() {
                   <span className="sender">{message.sender}</span>
                   <p className="content">
                     {message.content}
-                    <span className="hour">{getHours(message.createdAt)}</span>
+                    <span className="hour">{getDateAndHours(message.createdAt)}</span>
                   </p>
                 </div>
               ) : (
@@ -102,7 +90,7 @@ function Chat() {
                   <span className="sender">{message.sender}</span>
                   <p className="content">
                     {message.content}
-                    <span className="hour">{getHours(message.createdAt)}</span>
+                    <span className="hour">{getDateAndHours(message.createdAt)}</span>
                   </p>
                 </div>
               )
