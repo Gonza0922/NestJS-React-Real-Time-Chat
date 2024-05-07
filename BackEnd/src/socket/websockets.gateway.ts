@@ -26,18 +26,23 @@ export class WebSocketsGateway
   private usersHandle: string[] = [];
   async handleConnection(@ConnectedSocket() socket: Socket) {
     const { userName } = socket.handshake.auth;
-    console.log(`${userName} with id: ${socket.id} is connected `);
-    this.clients.push({ user: userName, id: socket.id });
-    const user = await this.usersService.getUser(userName);
-    if (!this.usersHandle.includes(user.name)) this.usersHandle.push(user.name);
-    this.server.emit('getOnlineUsers', this.usersHandle);
+    if (userName) {
+      console.log(`${userName} with id: ${socket.id} is connected `);
+      this.clients.push({ user: userName, id: socket.id });
+      const user = await this.usersService.getUser(userName);
+      if (!this.usersHandle.includes(user.name))
+        this.usersHandle.push(user.name);
+      this.server.emit('getOnlineUsers', this.usersHandle);
+    }
   }
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
     const { userName } = socket.handshake.auth;
-    console.log(`${socket.id} Disconnected`);
-    const user = await this.usersService.getUser(userName);
-    this.usersHandle = this.usersHandle.filter((name) => name !== user.name);
-    this.server.emit('getOnlineUsers', this.usersHandle);
+    if (userName) {
+      console.log(`${socket.id} Disconnected`);
+      const user = await this.usersService.getUser(userName);
+      this.usersHandle = this.usersHandle.filter((name) => name !== user.name);
+      this.server.emit('getOnlineUsers', this.usersHandle);
+    }
   }
   @SubscribeMessage('message')
   async handleMessage(
