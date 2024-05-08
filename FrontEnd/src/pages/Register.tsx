@@ -45,6 +45,7 @@ export function Register() {
               spellCheck={false}
               {...register("name", {
                 required: { value: true, message: "Name is required" },
+                minLength: { value: 2, message: "Name must be at least 2 characters" },
               })}
             />
             <div className="container-span">
@@ -85,6 +86,11 @@ export function Register() {
               spellCheck={false}
               {...register("password", {
                 required: { value: true, message: "Password is required" },
+                minLength: { value: 5, message: "Password must be at least 5 characters" },
+                pattern: {
+                  value: /^(?=.*[A-Z])(?=.*\d).+$/,
+                  message: "Password must contain at least 1 uppercase letter and a number",
+                },
               })}
             />
             <div className="container-span">

@@ -128,7 +128,6 @@ body {
 .chats-panel {
   background-color: #51535e44;
   width: 400px;
-  min-width: 300px;
   height: 760px;
   margin: 130px 20px 50px 50px;
 }
