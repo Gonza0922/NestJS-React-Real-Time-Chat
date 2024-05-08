@@ -6,6 +6,8 @@ import {
   Req,
   Res,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { LoginUserDto, RegisterUserDto } from '../users/users.dto';
 import { AuthService } from './auth.service';
@@ -20,10 +22,13 @@ export class AuthController {
     private usersService: UsersService,
   ) {}
   @Post('/register')
+  @UsePipes(new ValidationPipe())
   registerUser(@Res() res: Response, @Body() newUser: RegisterUserDto) {
-    return this.authService.signUp(res, newUser);
+    // return this.authService.signUp(res, newUser);
+    return newUser;
   }
   @Post('/login')
+  @UsePipes(new ValidationPipe())
   loginUser(@Res() res: Response, @Body() user: LoginUserDto) {
     return this.authService.signIn(res, user);
   }
