@@ -24,8 +24,7 @@ export class AuthController {
   @Post('/register')
   @UsePipes(new ValidationPipe())
   registerUser(@Res() res: Response, @Body() newUser: RegisterUserDto) {
-    // return this.authService.signUp(res, newUser);
-    return newUser;
+    return this.authService.signUp(res, newUser);
   }
   @Post('/login')
   @UsePipes(new ValidationPipe())
