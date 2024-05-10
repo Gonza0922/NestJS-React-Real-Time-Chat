@@ -22,6 +22,8 @@ export class RegisterUserDto {
     message: 'password must contain at least one uppercase letter and a number',
   })
   password: string;
+  @IsString()
+  image: string;
 }
 
 export class LoginUserDto {

@@ -23,6 +23,8 @@ export class AuthService {
     const userCreated = this.userRespository.create({
       ...newUser,
       password: hashedPassword,
+      image:
+        'https://res.cloudinary.com/dz5q0a2nd/image/upload/v1715366693/chat/user-not-image_d3f6t1.webp',
     });
     const userSaved = await this.userRespository.save(userCreated);
     const payload = { user_ID: userSaved.user_ID };
