@@ -9,6 +9,7 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
+  image: string;
 }
 
 export interface ChildrenType {

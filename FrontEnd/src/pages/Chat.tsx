@@ -80,18 +80,25 @@ function Chat() {
                 className={`sender-chat ${userToSend === receiver.name ? "selected" : ""}`}
                 onClick={() => setUserToSend(receiver.name)}
               >
-                <span className="sender-chat-span">{receiver.name}</span>
-                <div
-                  className={conectedUsers.includes(receiver.name) ? "online" : "offline"}
-                ></div>
-                <p className="sender">
-                  {lastMessageSender === user.name ? "Me" : receiver.name}:{" "}
-                  {lastMessageContent &&
-                    (lastMessageContent.length < 25
-                      ? lastMessageContent
-                      : `${lastMessageContent.substring(0, 25)}...`)}
-                </p>
-                <span className="last-message-hour">{getDateAndHours(lastMessageCreatedAt)}</span>
+                <div className="container-image-and-online">
+                  <div
+                    className={conectedUsers.includes(receiver.name) ? "online" : "offline"}
+                  ></div>
+                  <img className="user-image" src={receiver.image} alt="user-image" />
+                </div>
+                <div className="container-user-chat-content">
+                  <span className="sender-chat-span">{receiver.name}</span>
+                  <p className="sender-content">
+                    {lastMessageSender === user.name ? "Me" : receiver.name}:{" "}
+                    {lastMessageContent &&
+                      (lastMessageContent.length < 25
+                        ? lastMessageContent
+                        : `${lastMessageContent.substring(0, 25)}...`)}
+                  </p>
+                  <span className="last-message-hour">
+                    {getDateAndHours(lastMessageCreatedAt)}
+                  </span>
+                </div>
               </div>
             );
           })}
