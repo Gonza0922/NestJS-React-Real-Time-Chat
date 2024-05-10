@@ -12,7 +12,7 @@ export class MessagesService {
     private usersService: UsersService,
   ) {}
   getAllMessages() {
-    return this.messageRepository.find();
+    return this.messageRepository.find({ relations: ['sender', 'receiver'] });
   }
   async getMessagesByReceiver(authName: sender, receiver: string) {
     if (receiver !== 'none') {
