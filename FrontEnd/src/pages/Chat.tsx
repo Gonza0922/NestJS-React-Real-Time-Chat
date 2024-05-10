@@ -64,7 +64,7 @@ function Chat() {
                   </span>
                   <p className="content">{message.content}</p>
                 </div>
-              ) : (
+              ) : message.sender === userToSend ? (
                 <div key={index} className="left">
                   <span className="sender">
                     {message.sender}
@@ -72,6 +72,8 @@ function Chat() {
                   </span>
                   <p className="content">{message.content}</p>
                 </div>
+              ) : (
+                ""
               )
             )}
           </div>
