@@ -8,8 +8,17 @@ import { useSocketContext } from "../contexts/SocketContext.tsx";
 
 function Chat() {
   const { user, logout } = useUserContext();
-  const { conectedUsers, socket, userToSend, setUserToSend, messages, setMessages, dateISO } =
-    useSocketContext();
+  const {
+    conectedUsers,
+    socket,
+    userToSend,
+    setUserToSend,
+    messages,
+    setMessages,
+    dateISO,
+    allMessages,
+    setAllMessages,
+  } = useSocketContext();
   const { users } = useGetAllUsers(user.name);
   const [text, setText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -23,9 +32,30 @@ function Chat() {
     if (text.trim()) {
       // no se envian inputs vacios
       if (socket) socket.emit("message", text);
-      setMessages([...messages, { sender: user.name, content: text, createdAt: dateISO }]);
+      const completeData = {
+        sender: user.name,
+        content: text,
+        createdAt: dateISO,
+        receiver: userToSend,
+      };
+      setMessages([...messages, completeData]);
+      setAllMessages([...allMessages, completeData]);
       setText("");
     }
+  };
+
+  const getLastMessage = (sender: string, receiver: string) => {
+    if (!allMessages) return [undefined, undefined, undefined];
+    const lastMessage = allMessages
+      .slice()
+      .reverse()
+      .find(
+        (message: Message) =>
+          (message.sender === sender && message.receiver === receiver) ||
+          (message.sender === receiver && message.receiver === sender)
+      );
+    const { content, sender: resultSender, createdAt: resultCreatedAt } = lastMessage;
+    return [content, resultSender, resultCreatedAt];
   };
 
   return (
@@ -39,16 +69,32 @@ function Chat() {
       <div className="chats-panel">
         <nav className="chats-navbar">Chats</nav>
         <div className="chats" ref={scrollRef}>
-          {users.map((user: RegisterData, index: number) => (
-            <div
-              key={index}
-              className={`sender-chat ${userToSend === user.name ? "selected" : ""}`}
-              onClick={() => setUserToSend(user.name)}
-            >
-              <span className="sender-chat-span">{user.name}</span>
-              <div className={conectedUsers.includes(user.name) ? "online" : "offline"}></div>
-            </div>
-          ))}
+          {users.map((receiver: RegisterData, index: number) => {
+            const [lastMessageContent, lastMessageSender, lastMessageCreatedAt] = getLastMessage(
+              user.name,
+              receiver.name
+            );
+            return (
+              <div
+                key={index}
+                className={`sender-chat ${userToSend === receiver.name ? "selected" : ""}`}
+                onClick={() => setUserToSend(receiver.name)}
+              >
+                <span className="sender-chat-span">{receiver.name}</span>
+                <div
+                  className={conectedUsers.includes(receiver.name) ? "online" : "offline"}
+                ></div>
+                <p className="sender">
+                  {lastMessageSender === user.name ? "Me" : receiver.name}:{" "}
+                  {lastMessageContent &&
+                    (lastMessageContent.length < 25
+                      ? lastMessageContent
+                      : `${lastMessageContent.substring(0, 25)}...`)}
+                </p>
+                <span className="last-message-hour">{getDateAndHours(lastMessageCreatedAt)}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
       {userToSend !== "none" ? (

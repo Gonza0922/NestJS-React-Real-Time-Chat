@@ -4,6 +4,7 @@ import { Socket, io } from "socket.io-client";
 import { useUserContext } from "./UserContext";
 import { Message } from "../interfaces/message.interfaces";
 import { useGetAllMessages } from "../hooks/messages.hooks";
+import { getAllMessagesRequest } from "../api/messages.api";
 
 const socketContext = createContext<any>(undefined);
 
@@ -13,12 +14,27 @@ export function useSocketContext() {
 
 const SocketProvider = (props: ChildrenType) => {
   const token = sessionStorage.getItem("token");
+  const [userToSend, setUserToSend] = useState("none");
+  const { messages, setMessages } = useGetAllMessages(userToSend, token);
   const { user, isAuthenticated } = useUserContext();
   const [conectedUsers, setConectedUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket>();
-  const [userToSend, setUserToSend] = useState("none");
-  const { messages, setMessages } = useGetAllMessages(userToSend, token);
+  const [allMessages, setAllMessages] = useState<Message[]>([]);
   const dateISO = new Date().toISOString();
+
+  useEffect(() => {
+    const getMessagesReceiver = async () => {
+      let data = await getAllMessagesRequest();
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          data[i].sender = data[i].sender.name;
+          data[i].receiver = data[i].receiver.name;
+        }
+      }
+      setAllMessages(data);
+    };
+    getMessagesReceiver();
+  }, []);
 
   useEffect(() => {
     const socket = io("http://localhost:3000", {
@@ -29,20 +45,35 @@ const SocketProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("getOnlineUsers", async (names: string[]) => {
-        setConectedUsers(names);
-      });
+      const allMessagesHandler = (data: Message) => {
+        data = { ...data, createdAt: dateISO, receiver: user.name };
+        setAllMessages((prevMessages) => [...prevMessages, data]);
+      };
+      socket.on("message", allMessagesHandler);
+      return () => {
+        socket.off("message", allMessagesHandler);
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("getOnlineUsers", (names: string[]) => setConectedUsers(names));
+      return () => {
+        socket.off("getOnlineUsers", (names: string[]) => setConectedUsers(names));
+      };
     }
   }, [isAuthenticated]);
 
   useEffect(() => {
     if (socket) {
-      socket.on("message", (data: Message) => {
-        data = { ...data, createdAt: dateISO };
+      const messagesHandler = (data: Message) => {
+        data = { ...data, createdAt: dateISO, receiver: userToSend };
         setMessages((state: Message[]) => [...state, data]);
-      });
+      };
+      socket.on("message", messagesHandler);
       return () => {
-        socket.close();
+        socket.off("message", messagesHandler);
       };
     }
   }, [userToSend]);
@@ -57,6 +88,8 @@ const SocketProvider = (props: ChildrenType) => {
         messages,
         setMessages,
         dateISO,
+        allMessages,
+        setAllMessages,
       }}
     >
       {props.children}

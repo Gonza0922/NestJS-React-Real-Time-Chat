@@ -182,9 +182,18 @@ body {
   background-color: greenyellow;
   width: 10px;
   height: 10px;
-  float: right;
-  transform: translateY(9px);
   border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.last-message-hour {
+  color: grey;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateY(-20px);
+  float: right;
+  margin-left: 8px;
 }
 
 /* CHAT NONE */
