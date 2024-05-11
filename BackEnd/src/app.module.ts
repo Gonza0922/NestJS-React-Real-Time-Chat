@@ -5,6 +5,7 @@ import { MessagesModule } from './messages/messages.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.TOKEN_SECURE,
       signOptions: { expiresIn: '1d' },
     }),
+    ImagesModule,
   ],
 })
 export class AppModule {}
