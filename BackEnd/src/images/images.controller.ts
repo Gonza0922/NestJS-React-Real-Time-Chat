@@ -5,6 +5,8 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { UpdateImageDto } from './images.dto';
@@ -17,6 +19,7 @@ export class ImagesController {
     return this.imagesService.getImageByUserId(user_ID);
   }
   @Put('/put/:user_ID')
+  @UsePipes(new ValidationPipe())
   putImageByUserIdEndpoint(
     @Param('user_ID', ParseIntPipe) user_ID: number,
     @Body() newImage: UpdateImageDto,
