@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ImagesModule } from './images/images.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ImagesModule } from './images/images.module';
       secret: process.env.TOKEN_SECURE,
       signOptions: { expiresIn: '1d' },
     }),
+    CloudinaryModule,
     ImagesModule,
   ],
 })

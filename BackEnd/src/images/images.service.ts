@@ -9,8 +9,8 @@ export class ImagesService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async getImageByUserId(user_ID: number) {
-    const findUser = await this.userRepository.find({ where: { user_ID } });
-    return findUser[0].image;
+    const [findUser] = await this.userRepository.find({ where: { user_ID } });
+    return findUser.image;
   }
   putImageByUserId(user_ID: number, newImage: string) {
     return this.userRepository.update({ user_ID }, { image: newImage });
