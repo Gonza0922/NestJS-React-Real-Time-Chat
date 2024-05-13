@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -24,5 +25,9 @@ export class ImagesController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.imagesService.putImageByUserId(user_ID, file);
+  }
+  @Delete('/delete/:user_ID')
+  deleteImageByUserIdEndpoint(@Param('user_ID', ParseIntPipe) user_ID: number) {
+    return this.imagesService.deleteImageByUserId(user_ID);
   }
 }
