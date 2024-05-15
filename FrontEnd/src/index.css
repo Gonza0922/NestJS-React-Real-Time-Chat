@@ -220,6 +220,67 @@ body {
   margin-left: 8px;
 }
 
+.profile-image-mini {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  float: right;
+  cursor: pointer;
+  transform: translateY(-4px);
+}
+
+.span-chats {
+  cursor: pointer;
+}
+
+.profile-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.container-input-and-profile-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-and-profile-image {
+  margin-top: 10px;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+}
+
+.input-and-profile-image input[type="file"] {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.input-and-profile-image:hover::after {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 180px;
+  background-color: rgba(87, 87, 87, 0.473);
+  border-radius: 50%;
+  content: "Change Profile Image";
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  pointer-events: none;
+}
+
 /* CHAT NONE */
 
 .container-none {
@@ -233,6 +294,12 @@ body {
   height: 815px;
   margin: 20px;
   margin-top: 100px;
+}
+
+.update-profile {
+  width: 410px;
+  height: 700px;
+  padding: 20px;
 }
 
 /* CHAT */
