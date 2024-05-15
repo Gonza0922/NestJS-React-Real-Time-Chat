@@ -6,6 +6,7 @@ import { RegisterData } from "../interfaces/user.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useForm } from "react-hook-form";
+import { putImageRequest } from "../api/images.api.ts";
 
 function Chat() {
   const { user, logout, error } = useUserContext();
@@ -23,7 +24,12 @@ function Chat() {
   const { users } = useGetAllUsers(user.name);
   const [text, setText] = useState("");
   const [panel, setPanel] = useState("chats");
-  const [updateName, setUpdateName] = useState(user.name);
+  const [updateProfile, setUpdateProfile] = useState({
+    name: user.name,
+    image: user.image,
+    url: user.image,
+  });
+  const [loading, setLoading] = useState("Update Profile");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -68,8 +74,24 @@ function Chat() {
   };
 
   const handleUpdateProfile = handleSubmit((data) => {
-    console.log(data);
+    console.log(data); //falta updatear el nombre si se quiere
+    if (updateProfile.image !== user.image) putImageRequest(user.user_ID, updateProfile.image);
+    setLoading("Loading...");
+    setTimeout(() => {
+      location.reload();
+      setLoading("Update Profile");
+    }, 2000); // esto es solo la imagen
   });
+
+  const handleImageChange = (e: any) => {
+    const selectedImage = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2)
+        setUpdateProfile({ ...updateProfile, url: reader.result, image: selectedImage });
+    };
+    if (selectedImage) reader.readAsDataURL(selectedImage);
+  };
 
   return (
     <>
@@ -81,13 +103,19 @@ function Chat() {
       </nav>
       <div className="chats-panel">
         <nav className="chats-navbar">
-          <span onClick={() => setPanel("chats")} className="span-chats">
+          <span
+            onClick={() => {
+              setUpdateProfile({ ...updateProfile, url: user.image, image: user.image });
+              setPanel("chats");
+            }}
+            className="span-chats"
+          >
             Chats
           </span>
           <img
             onClick={() => setPanel("image")}
             className="profile-image-mini"
-            src={user.image}
+            src={updateProfile.url}
             alt="profile Image"
           />
         </nav>
@@ -127,20 +155,11 @@ function Chat() {
           </div>
         ) : (
           <div className="update-profile">
-            {/* <div className="container-profile-image">
-              <img
-                className="profile-image"
-                src={user.image}
-                alt="profile Image"
-                onClick={() => console.log("Click")}
-              />
-              <button className="button-profile-image"></button>
-            </div> */}
             <div className="container-input-and-profile-image">
               <div className="input-and-profile-image">
-                <input type="file" />
+                <input type="file" onChange={(e) => handleImageChange(e)} />
                 <img
-                  src={user.image}
+                  src={updateProfile.url}
                   alt="profile Image"
                   className="profile-image"
                   onClick={() => console.log("Click")}
@@ -163,14 +182,14 @@ function Chat() {
                   <input
                     id="name"
                     type="text"
-                    value={updateName}
+                    value={updateProfile.name}
                     className="validate"
                     autoComplete="off"
                     spellCheck={false}
                     {...register("name", {
                       required: { value: true, message: "File is required" },
                       onChange: (e) => {
-                        setUpdateName(e.target.value);
+                        setUpdateProfile({ ...updateProfile, name: e.target.value });
                       },
                     })}
                   />
@@ -182,7 +201,7 @@ function Chat() {
               <div className="row-input">
                 <div className="container-button-login-register">
                   <button type="submit" id="reserve" className="button-login-register">
-                    Update Profile
+                    {loading}
                   </button>
                 </div>
               </div>

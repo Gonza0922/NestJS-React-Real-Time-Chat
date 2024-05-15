@@ -6,7 +6,9 @@ export const getImageRequest = async (user_ID: number) => {
 };
 
 export const putImageRequest = async (user_ID: number, file: File) => {
-  const request = await axios.put(`/images/put/${user_ID}`, file, {
+  const formData = new FormData();
+  formData.append("image", file);
+  const request = await axios.put(`/images/put/${user_ID}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
