@@ -29,7 +29,6 @@ function Chat() {
     image: user.image,
     url: user.image,
   });
-  const [loading, setLoading] = useState("Update Profile");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -76,11 +75,7 @@ function Chat() {
   const handleUpdateProfile = handleSubmit((data) => {
     console.log(data); //falta updatear el nombre si se quiere
     if (updateProfile.image !== user.image) putImageRequest(user.user_ID, updateProfile.image);
-    setLoading("Loading...");
-    setTimeout(() => {
-      location.reload();
-      setLoading("Update Profile");
-    }, 2000); // esto es solo la imagen
+    setPanel("chats");
   });
 
   const handleImageChange = (e: any) => {
@@ -201,7 +196,7 @@ function Chat() {
               <div className="row-input">
                 <div className="container-button-login-register">
                   <button type="submit" id="reserve" className="button-login-register">
-                    {loading}
+                    Update Profile
                   </button>
                 </div>
               </div>
