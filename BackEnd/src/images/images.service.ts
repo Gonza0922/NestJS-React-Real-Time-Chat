@@ -19,7 +19,8 @@ export class ImagesService {
     const [findUser] = await this.userRepository.find({
       where: { user_ID },
     });
-    destroyImageCloudinary(findUser);
+    if (findUser.image !== process.env.NONE_IMAGE)
+      destroyImageCloudinary(findUser);
     const response = await this.cloudinaryService.uploadFile(file); // Create image in cloudinary
     this.userRepository.update({ user_ID }, { image: response.secure_url });
     const [findUserchanged] = await this.userRepository.find({
@@ -31,14 +32,9 @@ export class ImagesService {
     const [findUser] = await this.userRepository.find({
       where: { user_ID },
     });
-    destroyImageCloudinary(findUser);
-    this.userRepository.update(
-      { user_ID },
-      {
-        image:
-          'https://res.cloudinary.com/dz5q0a2nd/image/upload/v1715366693/chat/user-not-image_d3f6t1.webp',
-      },
-    );
+    if (findUser.image !== process.env.NONE_IMAGE)
+      destroyImageCloudinary(findUser);
+    this.userRepository.update({ user_ID }, { image: process.env.NONE_IMAGE });
     return { message: `Image delete of user ${findUser.name}` };
   }
 }
