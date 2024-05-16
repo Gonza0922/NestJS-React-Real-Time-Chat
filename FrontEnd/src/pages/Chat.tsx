@@ -6,7 +6,7 @@ import { RegisterData } from "../interfaces/user.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useForm } from "react-hook-form";
-import { putImageRequest } from "../api/images.api.ts";
+import { deleteImageRequest, putImageRequest } from "../api/images.api.ts";
 
 function Chat() {
   const { user, logout, error } = useUserContext();
@@ -88,6 +88,15 @@ function Chat() {
     if (selectedImage) reader.readAsDataURL(selectedImage);
   };
 
+  const handleImageDelete = () => {
+    setUpdateProfile({
+      ...updateProfile,
+      url: "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1715833977/user-not-image_c8itqn.webp",
+    });
+    deleteImageRequest(user.user_ID);
+    setPanel("chats");
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -153,13 +162,11 @@ function Chat() {
             <div className="container-input-and-profile-image">
               <div className="input-and-profile-image">
                 <input type="file" onChange={(e) => handleImageChange(e)} />
-                <img
-                  src={updateProfile.url}
-                  alt="profile Image"
-                  className="profile-image"
-                  onClick={() => console.log("Click")}
-                />
+                <img src={updateProfile.url} alt="profile Image" className="profile-image" />
               </div>
+              <button onClick={handleImageDelete} className="button-delete">
+                Delete
+              </button>
             </div>
             <form onSubmit={handleUpdateProfile}>
               <div className="container-errors">
