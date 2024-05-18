@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   MinLength,
   Matches,
+  IsOptional,
 } from 'class-validator';
 
 export class RegisterUserDto {
@@ -38,4 +39,17 @@ export class LoginUserDto {
 
 export interface Password {
   password: string;
+}
+
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(2)
+  name: string;
+  @IsOptional()
+  @IsEmail()
+  @IsString()
+  @IsNotEmpty()
+  email: string;
 }

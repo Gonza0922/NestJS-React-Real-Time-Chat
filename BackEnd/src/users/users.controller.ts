@@ -5,9 +5,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Password } from './users.dto';
+import { Password, UpdateUserDto } from './users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -27,5 +30,13 @@ export class UsersController {
   @Post('/post/password')
   getUserByPasswordEndpoint(@Body() hash: Password) {
     return this.userService.getUserByPassword(hash.password);
+  }
+  @Put('/put/:user_ID')
+  @UsePipes(new ValidationPipe())
+  putUserEndpoint(
+    @Body() data: UpdateUserDto,
+    @Param('user_ID', ParseIntPipe) user_ID: number,
+  ) {
+    return this.userService.putUserById(user_ID, data);
   }
 }
