@@ -5,7 +5,6 @@ import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
-import { useForm } from "react-hook-form";
 import { deleteImageRequest, putImageRequest } from "../api/images.api.ts";
 
 function Chat() {
@@ -30,12 +29,6 @@ function Chat() {
     url: user.image,
   });
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterData>();
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -72,11 +65,10 @@ function Chat() {
     return [content, resultSender, resultCreatedAt];
   };
 
-  const handleUpdateProfile = handleSubmit((data) => {
-    console.log(data); //falta updatear el nombre si se quiere
+  const handleUpdateProfile = () => {
     if (updateProfile.image !== user.image) putImageRequest(user.user_ID, updateProfile.image);
     setPanel("chats");
-  });
+  };
 
   const handleImageChange = (e: any) => {
     const selectedImage = e.target.files[0];
@@ -168,46 +160,26 @@ function Chat() {
                 Delete
               </button>
             </div>
-            <form onSubmit={handleUpdateProfile}>
-              <div className="container-errors">
-                {error === "User not found" ? (
-                  <div className="error">{error}</div>
-                ) : error === "Incorrect Password" ? (
-                  <div className="error">{error}</div>
-                ) : (
-                  <div></div>
-                )}
+            <div className="container-errors">
+              {error === "User not found" ? (
+                <div className="error">{error}</div>
+              ) : error === "Incorrect Password" ? (
+                <div className="error">{error}</div>
+              ) : (
+                <div></div>
+              )}
+            </div>
+            <div className="row-input">
+              <div className="container-button-login-register">
+                <button
+                  onClick={handleUpdateProfile}
+                  id="reserve"
+                  className="button-login-register"
+                >
+                  Update Profile
+                </button>
               </div>
-              <div className="row-input">
-                <div className="input-field">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    id="name"
-                    type="text"
-                    value={updateProfile.name}
-                    className="validate"
-                    autoComplete="off"
-                    spellCheck={false}
-                    {...register("name", {
-                      required: { value: true, message: "File is required" },
-                      onChange: (e) => {
-                        setUpdateProfile({ ...updateProfile, name: e.target.value });
-                      },
-                    })}
-                  />
-                  <div className="container-span">
-                    {errors.name && <span>{errors.name.message}</span>}
-                  </div>
-                </div>
-              </div>
-              <div className="row-input">
-                <div className="container-button-login-register">
-                  <button type="submit" id="reserve" className="button-login-register">
-                    Update Profile
-                  </button>
-                </div>
-              </div>
-            </form>
+            </div>
           </div>
         )}
       </div>
