@@ -1,93 +1,25 @@
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useEffect } from "react";
 import { useUserContext } from "../contexts/UserContext.tsx";
-import { Message } from "../interfaces/message.interfaces.ts";
-import { useGetAllUsers } from "../hooks/users.hooks.ts";
-import { RegisterData } from "../interfaces/user.interfaces.ts";
-import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
-import { deleteImageRequest, putImageRequest } from "../api/images.api.ts";
+import ChatsPanel from "../components/ChatsPanel.tsx";
+import UpdateImagePanel from "../components/UpdateImagePanel.tsx";
+import MessagesContainer from "../components/MessagesContainer.tsx";
 
 function Chat() {
-  const { user, logout, error } = useUserContext();
-  const {
-    conectedUsers,
-    socket,
-    userToSend,
-    setUserToSend,
-    messages,
-    setMessages,
-    dateISO,
-    allMessages,
-    setAllMessages,
-  } = useSocketContext();
-  const { users } = useGetAllUsers(user.name);
-  const [text, setText] = useState("");
-  const [panel, setPanel] = useState("chats");
-  const [updateProfile, setUpdateProfile] = useState({
-    name: user.name,
-    image: user.image,
-    url: user.image,
-  });
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const { user, logout, updateProfile, setUpdateProfile } = useUserContext();
+  const { userToSend, messages, panel, setPanel, scrollRef } = useSocketContext();
+
+  useEffect(() => {
+    setUpdateProfile({
+      name: user.name,
+      image: user.image,
+      url: user.image,
+    });
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages]);
-
-  const textHandleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (text.trim()) {
-      // no se envian inputs vacios
-      if (socket) socket.emit("message", text);
-      const completeData = {
-        sender: user.name,
-        content: text,
-        createdAt: dateISO,
-        receiver: userToSend,
-      };
-      setMessages([...messages, completeData]);
-      setAllMessages([...allMessages, completeData]);
-      setText("");
-    }
-  };
-
-  const getLastMessage = (sender: string, receiver: string) => {
-    if (!allMessages) return [undefined, undefined, undefined];
-    const lastMessage = allMessages
-      .slice()
-      .reverse()
-      .find(
-        (message: Message) =>
-          (message.sender === sender && message.receiver === receiver) ||
-          (message.sender === receiver && message.receiver === sender)
-      );
-    const { content, sender: resultSender, createdAt: resultCreatedAt } = lastMessage;
-    return [content, resultSender, resultCreatedAt];
-  };
-
-  const handleUpdateProfile = () => {
-    if (updateProfile.image !== user.image) putImageRequest(user.user_ID, updateProfile.image);
-    setPanel("chats");
-  };
-
-  const handleImageChange = (e: any) => {
-    const selectedImage = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2)
-        setUpdateProfile({ ...updateProfile, url: reader.result, image: selectedImage });
-    };
-    if (selectedImage) reader.readAsDataURL(selectedImage);
-  };
-
-  const handleImageDelete = () => {
-    setUpdateProfile({
-      ...updateProfile,
-      url: "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1715833977/user-not-image_c8itqn.webp",
-    });
-    deleteImageRequest(user.user_ID);
-    setPanel("chats");
-  };
 
   return (
     <>
@@ -115,114 +47,10 @@ function Chat() {
             alt="profile Image"
           />
         </nav>
-        {panel === "chats" ? (
-          <div className="chats" ref={scrollRef}>
-            {users.map((receiver: RegisterData, index: number) => {
-              const [lastMessageContent, lastMessageSender, lastMessageCreatedAt] =
-                getLastMessage(user.name, receiver.name);
-              return (
-                <div
-                  key={index}
-                  className={`sender-chat ${userToSend === receiver.name ? "selected" : ""}`}
-                  onClick={() => setUserToSend(receiver.name)}
-                >
-                  <div className="container-image-and-online">
-                    <div
-                      className={conectedUsers.includes(receiver.name) ? "online" : "offline"}
-                    ></div>
-                    <img className="user-image" src={receiver.image} alt="user-image" />
-                  </div>
-                  <div className="container-user-chat-content">
-                    <span className="sender-chat-span">{receiver.name}</span>
-                    <p className="sender-content">
-                      {lastMessageSender === user.name ? "Me" : receiver.name}:{" "}
-                      {lastMessageContent &&
-                        (lastMessageContent.length < 25
-                          ? lastMessageContent
-                          : `${lastMessageContent.substring(0, 25)}...`)}
-                    </p>
-                    <span className="last-message-hour">
-                      {getDateAndHours(lastMessageCreatedAt)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="update-profile">
-            <div className="container-input-and-profile-image">
-              <div className="input-and-profile-image">
-                <input type="file" onChange={(e) => handleImageChange(e)} />
-                <img src={updateProfile.url} alt="profile Image" className="profile-image" />
-              </div>
-              <button onClick={handleImageDelete} className="button-delete">
-                Delete
-              </button>
-            </div>
-            <div className="container-errors">
-              {error === "User not found" ? (
-                <div className="error">{error}</div>
-              ) : error === "Incorrect Password" ? (
-                <div className="error">{error}</div>
-              ) : (
-                <div></div>
-              )}
-            </div>
-            <div className="row-input">
-              <div className="container-button-login-register">
-                <button
-                  onClick={handleUpdateProfile}
-                  id="reserve"
-                  className="button-login-register"
-                >
-                  Update Profile
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {panel === "chats" ? <ChatsPanel /> : <UpdateImagePanel />}
       </div>
       {userToSend !== "none" ? (
-        <div className="container">
-          <nav className="navbar-chat">{userToSend}</nav>
-          <div className="screen" ref={scrollRef}>
-            {messages.map((message: Message, index: number) =>
-              message.sender === user.name ? (
-                <div key={index} className="right">
-                  <span className="sender">
-                    {message.sender}
-                    <span className="hour">{getDateAndHours(message.createdAt)}</span>
-                  </span>
-                  <p className="content">{message.content}</p>
-                </div>
-              ) : message.sender === userToSend ? (
-                <div key={index} className="left">
-                  <span className="sender">
-                    {message.sender}
-                    <span className="hour">{getDateAndHours(message.createdAt)}</span>
-                  </span>
-                  <p className="content">{message.content}</p>
-                </div>
-              ) : (
-                ""
-              )
-            )}
-          </div>
-          <form className="chat-form" onSubmit={textHandleSubmit}>
-            <input
-              className="input-chat"
-              id="input"
-              value={text}
-              type="text"
-              onChange={(e) => setText(e.target.value)}
-              autoFocus
-              spellCheck
-              autoComplete="off"
-            />
-            <button className="button-chat">Send</button>
-          </form>
-        </div>
+        <MessagesContainer />
       ) : (
         <div className="container-none">
           <div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { ChildrenType } from "../interfaces/user.interfaces";
 import { Socket, io } from "socket.io-client";
 import { useUserContext } from "./UserContext";
@@ -20,6 +20,8 @@ const SocketProvider = (props: ChildrenType) => {
   const [conectedUsers, setConectedUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket>();
   const [allMessages, setAllMessages] = useState<Message[]>([]);
+  const [panel, setPanel] = useState("chats");
+  const scrollRef = useRef<HTMLDivElement>(null);
   const dateISO = new Date().toISOString();
 
   useEffect(() => {
@@ -90,6 +92,9 @@ const SocketProvider = (props: ChildrenType) => {
         dateISO,
         allMessages,
         setAllMessages,
+        panel,
+        setPanel,
+        scrollRef,
       }}
     >
       {props.children}

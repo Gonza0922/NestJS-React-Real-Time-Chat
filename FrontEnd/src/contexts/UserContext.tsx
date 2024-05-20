@@ -13,6 +13,7 @@ const UserProvider = (props: ChildrenType) => {
   const [user, setUser] = useState<object>({});
   const [error, setError] = useState<object[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [updateProfile, setUpdateProfile] = useState({});
 
   useEffect(() => {
     if (error.length > 0) {
@@ -91,6 +92,8 @@ const UserProvider = (props: ChildrenType) => {
         isAuthenticated,
         error,
         setError,
+        updateProfile,
+        setUpdateProfile,
       }}
     >
       {props.children}
