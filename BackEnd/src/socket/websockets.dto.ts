@@ -1,4 +1,5 @@
 export interface ClientDto {
-  user: string;
+  user: number;
   id: string;
+  socket: any;
 }

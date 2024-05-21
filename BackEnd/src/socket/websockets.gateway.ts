@@ -28,7 +28,7 @@ export class WebSocketsGateway
     const { userName } = socket.handshake.auth;
     if (userName) {
       console.log(`${userName} with id: ${socket.id} is connected `);
-      this.clients.push({ user: userName, id: socket.id });
+      this.clients.push({ user: userName, id: socket.id, socket });
       const user = await this.usersService.getUser(userName);
       if (!this.usersHandle.includes(user.name))
         this.usersHandle.push(user.name);
@@ -39,6 +39,7 @@ export class WebSocketsGateway
     const { userName } = socket.handshake.auth;
     if (userName) {
       console.log(`${socket.id} Disconnected`);
+      this.clients.filter((client) => client.id !== socket.id);
       const user = await this.usersService.getUser(userName);
       this.usersHandle = this.usersHandle.filter((name) => name !== user.name);
       this.server.emit('getOnlineUsers', this.usersHandle);
@@ -47,13 +48,13 @@ export class WebSocketsGateway
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() data: string,
+    @MessageBody() content: string,
   ) {
     const { userName, receiver } = socket.handshake.auth;
-    const finalData = { sender: userName, content: data };
+    const finalData = { sender: userName, content };
     const receiverUser = await this.usersService.getUserByName(receiver);
     this.clients.forEach(async (client: ClientDto) => {
-      if (parseInt(client.user) === receiverUser.user_ID) {
+      if (client.user === receiverUser.user_ID) {
         const senderUser = await this.usersService.getUser(userName);
         this.server
           .to(client.id)
@@ -63,6 +64,29 @@ export class WebSocketsGateway
     this.messageService.postMessage({
       ...finalData,
       receiver: receiverUser.user_ID,
+    });
+  }
+  @SubscribeMessage('createRoom')
+  async createRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() roomName: string,
+  ) {
+    socket.join(roomName);
+    console.log(`Client ${socket.id} create room ${roomName}`);
+  }
+  @SubscribeMessage('addClientToRoom')
+  handleAddClientToRoom(
+    socket: Socket,
+    data: { room: string; clientUser_ID: number },
+  ) {
+    const { room, clientUser_ID } = data;
+    this.clients.forEach(async (client: ClientDto) => {
+      if (clientUser_ID === client.user) {
+        client.socket.join(room);
+        console.log(`Client ${clientUser_ID} joined room ${room}`);
+      } else {
+        console.log(`Client ${clientUser_ID} not found`);
+      }
     });
   }
 }
