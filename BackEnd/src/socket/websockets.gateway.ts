@@ -11,6 +11,8 @@ import { Server, Socket } from 'socket.io';
 import { MessagesService } from 'src/messages/messages.service';
 import { ClientDto } from './websockets.dto';
 import { UsersService } from 'src/users/users.service';
+import { RoomsService } from 'src/rooms/rooms.service';
+import { CreateRoomDto } from 'src/rooms/rooms.dto';
 
 @WebSocketGateway({ cors: 'http://localhost:5173' })
 export class WebSocketsGateway
@@ -19,11 +21,13 @@ export class WebSocketsGateway
   constructor(
     private messageService: MessagesService,
     private usersService: UsersService,
+    private roomService: RoomsService,
   ) {}
   @WebSocketServer()
   server: Server;
   private clients: ClientDto[] = [];
   private usersHandle: string[] = [];
+
   async handleConnection(@ConnectedSocket() socket: Socket) {
     const { userName } = socket.handshake.auth;
     if (userName) {
@@ -35,6 +39,7 @@ export class WebSocketsGateway
       this.server.emit('getOnlineUsers', this.usersHandle);
     }
   }
+
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
     const { userName } = socket.handshake.auth;
     if (userName) {
@@ -45,6 +50,7 @@ export class WebSocketsGateway
       this.server.emit('getOnlineUsers', this.usersHandle);
     }
   }
+
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() socket: Socket,
@@ -66,27 +72,28 @@ export class WebSocketsGateway
       receiver: receiverUser.user_ID,
     });
   }
+
   @SubscribeMessage('createRoom')
   async createRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() roomName: string,
+    @MessageBody() data: CreateRoomDto,
   ) {
-    socket.join(roomName);
-    console.log(`Client ${socket.id} create room ${roomName}`);
+    const { name, creator } = data;
+    socket.join(name);
+    console.log(`Client ${socket.id} create room ${name}`);
+    this.roomService.postRoom({ name, creator, member: creator });
   }
+
   @SubscribeMessage('addClientToRoom')
-  handleAddClientToRoom(
-    socket: Socket,
-    data: { room: string; clientUser_ID: number },
-  ) {
-    const { room, clientUser_ID } = data;
+  handleAddClientToRoom(data: CreateRoomDto) {
+    // { name: string, creator: number, member: number }
+    const { name, creator, member } = data;
     this.clients.forEach(async (client: ClientDto) => {
-      if (clientUser_ID === client.user) {
-        client.socket.join(room);
-        console.log(`Client ${clientUser_ID} joined room ${room}`);
-      } else {
-        console.log(`Client ${clientUser_ID} not found`);
+      if (member === client.user) {
+        client.socket.join(name);
+        console.log(`Client ${member} joined room ${name}`);
       }
     });
+    this.roomService.postRoom({ name, creator, member });
   }
 }
