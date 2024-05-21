@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ImagesModule } from './images/images.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     }),
     CloudinaryModule,
     ImagesModule,
+    RoomsModule,
   ],
 })
 export class AppModule {}
