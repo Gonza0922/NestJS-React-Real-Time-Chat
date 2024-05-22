@@ -9,7 +9,7 @@ import { RegisterData } from "../interfaces/user.interfaces.ts";
 
 function Chat() {
   const { user, logout, updateProfile, setUpdateProfile, setError, error } = useUserContext();
-  const { userToSend, messages, panel, setPanel, scrollRef } = useSocketContext();
+  const { userToSend, messages, panel, setPanel, scrollRef, socket } = useSocketContext();
   const { users } = useGetAllUsers(user.name);
   const [room, setRoom] = useState({ name: "", creator: user.user_ID });
   const [members, setMembers] = useState<number[]>([]);
@@ -30,12 +30,14 @@ function Chat() {
     e.preventDefault();
     if (room.name === "") return setError("Required Room Name");
     if (members.length > 0) {
-      members.forEach((member: number) => {
-        const finalData = { ...room, member };
-        console.log(finalData);
-      });
+      setError({});
+      socket.emit("createRoom", room);
+      socket.emit("addClientToRoom", { ...room, members });
+      console.log({ ...room, members });
     } else return setError("You have to select any user to create a room");
     setMembers([]);
+    setRoom({ name: "", creator: user.user_ID });
+    setPanel("chats");
   };
 
   const handleArray = (userId: number) => {
