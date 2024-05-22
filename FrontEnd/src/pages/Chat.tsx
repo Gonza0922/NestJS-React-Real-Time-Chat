@@ -8,7 +8,7 @@ import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
 
 function Chat() {
-  const { user, logout, updateProfile, setUpdateProfile, setError } = useUserContext();
+  const { user, logout, updateProfile, setUpdateProfile, setError, error } = useUserContext();
   const { userToSend, messages, panel, setPanel, scrollRef } = useSocketContext();
   const { users } = useGetAllUsers(user.name);
   const [room, setRoom] = useState({ name: "", creator: user.user_ID });
@@ -28,14 +28,13 @@ function Chat() {
 
   const roomHandleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (room.name === "") return setError("Required Room Name");
     if (members.length > 0) {
       members.forEach((member: number) => {
         const finalData = { ...room, member };
         console.log(finalData);
       });
-    } else {
-      setError("You have to select any user to create a room");
-    }
+    } else return setError("You have to select any user to create a room");
     setMembers([]);
   };
 
@@ -80,6 +79,9 @@ function Chat() {
           <form className="create-room" ref={scrollRef} onSubmit={roomHandleSubmit}>
             <div className="container-h2-span-input-button-h3">
               <h3>Create Room</h3>
+              <div className="container-errors">
+                {error.length > 0 ? <div className="room-error">{error}</div> : <div></div>}
+              </div>
               <span className="span-create-room">Room Name</span>
               <input
                 className="input-room-name"

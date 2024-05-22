@@ -58,6 +58,13 @@ body {
   padding: 10px;
 }
 
+.room-error {
+  text-align: center;
+  background-color: red;
+  color: white;
+  padding: 5px;
+}
+
 /* LOGIN AND REGISTER*/
 
 .form-login-register {
