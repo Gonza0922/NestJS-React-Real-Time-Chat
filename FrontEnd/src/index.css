@@ -133,6 +133,7 @@ body {
 }
 
 .chats-navbar {
+  position: relative;
   background-color: #34606d;
   padding: 15px;
   font-weight: bold;
@@ -297,6 +298,56 @@ body {
   background-color: rgb(168, 31, 31);
 }
 
+/* CREATE ROOM */
+
+.button-set-rooms {
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  right: 70px;
+}
+
+.create-room {
+  width: 455px;
+  height: 700px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.container-h2-span-input-button-h3 {
+  margin: 15px 15px 5px 15px;
+}
+
+.span-create-room {
+  display: inline-block;
+  width: 100%;
+}
+
+.select-users {
+  margin: 10px 0px;
+}
+
+.input-room-name {
+  background-color: rgb(255, 255, 255);
+  width: 65%;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.button-create-room {
+  background-color: #23a9d1;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.button-create-room:hover {
+  background-color: #1b82a1;
+}
 /* CHAT NONE */
 
 .container-none {
