@@ -17,12 +17,22 @@ export class RoomsService {
     return findRoom;
   }
   postRoom(newRoom: CreateRoomDto) {
-    const { name, creator } = newRoom;
-    newRoom.members.forEach((member) => {
+    let { image } = newRoom;
+    const { name, creator, members } = newRoom;
+    const defaultImage = process.env.ROOM_NONE_IMAGE;
+    if (!image) image = defaultImage;
+    console.log({
+      name,
+      creator,
+      members,
+      image,
+    });
+    members.forEach((member) => {
       const newRoomCreated = this.roomRepository.create({
         name,
         creator,
         member,
+        image,
       });
       return this.roomRepository.save(newRoomCreated);
     });

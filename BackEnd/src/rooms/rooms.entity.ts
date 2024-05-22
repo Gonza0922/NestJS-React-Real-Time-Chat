@@ -11,4 +11,6 @@ export class Room {
   creator: number;
   @ManyToOne(() => User, (user) => user.user_ID)
   member: number;
+  @Column()
+  image: string;
 }
