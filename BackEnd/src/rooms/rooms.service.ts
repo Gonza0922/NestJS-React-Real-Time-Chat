@@ -17,7 +17,14 @@ export class RoomsService {
     return findRoom;
   }
   postRoom(newRoom: CreateRoomDto) {
-    const newRoomCreated = this.roomRepository.create(newRoom);
-    return this.roomRepository.save(newRoomCreated);
+    const { name, creator } = newRoom;
+    newRoom.members.forEach((member) => {
+      const newRoomCreated = this.roomRepository.create({
+        name,
+        creator,
+        member,
+      });
+      return this.roomRepository.save(newRoomCreated);
+    });
   }
 }

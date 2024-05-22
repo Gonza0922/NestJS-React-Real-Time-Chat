@@ -7,28 +7,28 @@ import { UpdateUserDto } from './users.dto';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private userRespository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   getAllUsers() {
-    return this.userRespository.find();
+    return this.userRepository.find();
   }
   async getUser(user_ID: number) {
-    const [findUser] = await this.userRespository.find({ where: { user_ID } });
+    const [findUser] = await this.userRepository.find({ where: { user_ID } });
     return findUser;
   }
   async getUserByName(name: string) {
-    const [findUser] = await this.userRespository.find({ where: { name } });
+    const [findUser] = await this.userRepository.find({ where: { name } });
     return findUser;
   }
   async getUserByPassword(password: string) {
-    const [findUser] = await this.userRespository.find({ where: { password } });
+    const [findUser] = await this.userRepository.find({ where: { password } });
     return findUser;
   }
   async putUserById(user_ID: number, data: UpdateUserDto) {
-    await this.userRespository.update(
+    await this.userRepository.update(
       { user_ID },
       { name: data.name, email: data.email },
     );
-    return this.userRespository.find({ where: { user_ID } });
+    return this.userRepository.find({ where: { user_ID } });
   }
 }

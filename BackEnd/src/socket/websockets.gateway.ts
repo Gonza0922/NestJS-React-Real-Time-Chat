@@ -21,7 +21,7 @@ export class WebSocketsGateway
   constructor(
     private messageService: MessagesService,
     private usersService: UsersService,
-    private roomService: RoomsService,
+    private roomsService: RoomsService,
   ) {}
   @WebSocketServer()
   server: Server;
@@ -81,19 +81,21 @@ export class WebSocketsGateway
     const { name, creator } = data;
     socket.join(name);
     console.log(`Client ${socket.id} create room ${name}`);
-    this.roomService.postRoom({ name, creator, member: creator });
+    this.roomsService.postRoom({ name, creator, members: [creator] });
   }
 
   @SubscribeMessage('addClientToRoom')
-  handleAddClientToRoom(data: CreateRoomDto) {
-    // { name: string, creator: number, member: number }
-    const { name, creator, member } = data;
-    this.clients.forEach(async (client: ClientDto) => {
-      if (member === client.user) {
-        client.socket.join(name);
-        console.log(`Client ${member} joined room ${name}`);
-      }
+  handleAddClientToRoom(@MessageBody() data: CreateRoomDto) {
+    // { name: string, creator: number, members: number[] }
+    const { name, creator, members } = data;
+    members.forEach((member) => {
+      this.clients.forEach(async (client: ClientDto) => {
+        if (member === client.user) {
+          client.socket.join(name);
+          console.log(`Client ${member} joined room ${name}`);
+        }
+      });
     });
-    this.roomService.postRoom({ name, creator, member });
+    this.roomsService.postRoom({ name, creator, members });
   }
 }
