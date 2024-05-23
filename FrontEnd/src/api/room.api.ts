@@ -3,7 +3,13 @@ import axios from "./axios.ts";
 
 export const getRoomByNameRequest = async (roomName: string) => {
   //Select Room By Name
-  const request = await axios.get(`/rooms/get/${roomName}`);
+  const request = await axios.get(`/rooms/getByName/${roomName}`);
+  return request.data;
+};
+
+export const getRoomsByUserRequest = async (user_ID: number) => {
+  //Select Room By User
+  const request = await axios.get(`/rooms/getByUser/${user_ID}`);
   return request.data;
 };
 
