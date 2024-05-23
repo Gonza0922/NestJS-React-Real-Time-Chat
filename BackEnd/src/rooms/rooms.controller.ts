@@ -1,16 +1,27 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './rooms.dto';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(private roomsService: RoomsService) {}
-  @Get('/get/:roomName')
-  getAllMessagesEndpoint(@Param('roomName') roomName: string) {
+  @Get('/getByName/:roomName')
+  getRoomByNameEndpoint(@Param('roomName') roomName: string) {
     return this.roomsService.getRoomByName(roomName);
   }
+  @Get('/getByUser/:user_ID')
+  getRoomByUserEndpoint(@Param('user_ID', ParseIntPipe) user_ID: number) {
+    return this.roomsService.getRoomsByUser(user_ID);
+  }
   @Post('/post')
-  createMessageEndpoint(@Body() newRoom: CreateRoomDto) {
+  createRoomEndpoint(@Body() newRoom: CreateRoomDto) {
     return this.roomsService.postRoom(newRoom);
   }
 }

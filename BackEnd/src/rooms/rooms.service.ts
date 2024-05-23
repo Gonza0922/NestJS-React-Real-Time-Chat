@@ -10,12 +10,51 @@ export class RoomsService {
     @InjectRepository(Room) private roomRepository: Repository<Room>,
   ) {}
   async getRoomByName(roomName: string) {
-    const findRoom = await this.roomRepository.find({
-      relations: ['creator', 'member'],
-      where: { name: roomName },
+    let finalData = [];
+    const findRooms = await this.roomRepository
+      .createQueryBuilder()
+      .select('name')
+      .addSelect('image')
+      .addSelect('GROUP_CONCAT(memberUserID ORDER BY memberUserID)', 'members')
+      .where('name = :roomName', { roomName })
+      .groupBy('name')
+      .addGroupBy('image')
+      .getRawMany();
+    findRooms.forEach((room) => {
+      finalData.push({
+        ...room,
+        members: room.members.split(',').map(function (item: string) {
+          return parseInt(item, 10);
+        }),
+      });
     });
-    return findRoom;
+    return finalData;
   }
+
+  async getRoomsByUser(user_ID: number) {
+    let finalData = [];
+    const findRooms = await this.roomRepository
+      .createQueryBuilder()
+      .select('name')
+      .addSelect('image')
+      .addSelect('GROUP_CONCAT(memberUserID ORDER BY memberUserID)', 'members')
+      .where('(memberUserID = :user_ID OR creatorUserID = :user_ID)', {
+        user_ID,
+      })
+      .groupBy('name')
+      .addGroupBy('image')
+      .getRawMany();
+    findRooms.forEach((room) => {
+      finalData.push({
+        ...room,
+        members: room.members.split(',').map(function (item: string) {
+          return parseInt(item, 10);
+        }),
+      });
+    });
+    return finalData;
+  }
+
   postRoom(newRoom: CreateRoomDto) {
     let { image } = newRoom;
     const { name, creator, members } = newRoom;
