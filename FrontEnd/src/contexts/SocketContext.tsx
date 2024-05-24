@@ -13,10 +13,10 @@ export function useSocketContext() {
 }
 
 const SocketProvider = (props: ChildrenType) => {
+  const { user, isAuthenticated, isMembers } = useUserContext();
   const token = sessionStorage.getItem("token");
   const [userToSend, setUserToSend] = useState("none");
-  const { messages, setMessages } = useGetAllMessages(userToSend, token);
-  const { user, isAuthenticated } = useUserContext();
+  const { messages, setMessages } = useGetAllMessages(isMembers, token);
   const [conectedUsers, setConectedUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket>();
   const [allMessages, setAllMessages] = useState<Message[]>([]);
@@ -26,13 +26,7 @@ const SocketProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     const getMessagesReceiver = async () => {
-      let data = await getAllMessagesRequest();
-      if (data) {
-        for (let i = 0; i < data.length; i++) {
-          data[i].sender = data[i].sender.name;
-          data[i].receiver = data[i].receiver.name;
-        }
-      }
+      const data = await getAllMessagesRequest();
       setAllMessages(data);
     };
     getMessagesReceiver();

@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Message } from "../interfaces/message.interfaces.ts";
+// import { Message } from "../interfaces/message.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useUserContext } from "../contexts/UserContext.tsx";
@@ -39,7 +39,7 @@ function MessagesContainer() {
     <div className="container">
       <nav className="navbar-chat">{userToSend}</nav>
       <div className="screen" ref={scrollRef}>
-        {messages.map((message: Message, index: number) =>
+        {messages.map((message: any, index: number) =>
           message.sender === user.name ? (
             <div key={index} className="right">
               <span className="sender">
@@ -48,7 +48,7 @@ function MessagesContainer() {
               </span>
               <p className="content">{message.content}</p>
             </div>
-          ) : message.sender === userToSend ? (
+          ) : message.sender === userToSend || message.receiverName === userToSend ? (
             <div key={index} className="left">
               <span className="sender">
                 {message.sender}
