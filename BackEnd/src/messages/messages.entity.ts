@@ -13,4 +13,6 @@ export class Message {
   createdAt: Date;
   @ManyToOne(() => User, (user) => user.user_ID)
   receiver: number;
+  @Column()
+  receiverName: string;
 }
