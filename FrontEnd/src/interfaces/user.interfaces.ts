@@ -15,3 +15,12 @@ export interface RegisterData {
 export interface ChildrenType {
   children: React.ReactNode;
 }
+
+export interface UsersAndRooms {
+  user_ID: number;
+  name: string;
+  email: string;
+  password: string;
+  image: string;
+  members?: number[];
+}
