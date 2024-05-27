@@ -17,13 +17,11 @@ export class MessagesService {
   async getMessagesByReceiver(authName: string, receiver: any) {
     if (receiver !== 'none') {
       if (typeof receiver.data === 'object') {
-        console.log('es un grupo');
         return await this.messageRepository.find({
           relations: ['sender', 'receiver'],
           where: { receiverName: receiver.name },
         });
       } else {
-        console.log('es una persona');
         const user = await this.usersService.getUserByPassword(authName);
         const receiverUser = await this.usersService.getUserByName(
           receiver.name,

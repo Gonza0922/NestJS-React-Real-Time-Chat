@@ -56,21 +56,51 @@ export class WebSocketsGateway
     @ConnectedSocket() socket: Socket,
     @MessageBody() content: string,
   ) {
+    let room: any;
     const { userName, receiver } = socket.handshake.auth;
-    const finalData = { sender: userName, content };
-    const receiverUser = await this.usersService.getUserByName(receiver);
+    const finalData = { sender: userName, content, receiverName: receiver };
+    const receiverUser = await this.usersService.getUserByName(receiver); // si es un grupo no va a existir
+    if (!receiverUser) {
+      const [findRoom] = await this.roomsService.getRoomByName(receiver);
+      //nos aseguramos de que el receiver es el nombre de una room existente
+      room = findRoom;
+    }
+
     this.clients.forEach(async (client: ClientDto) => {
-      if (client.user === receiverUser.user_ID) {
-        const senderUser = await this.usersService.getUser(userName);
-        this.server
-          .to(client.id)
-          .emit('message', { ...finalData, sender: senderUser.name });
+      if (receiverUser) {
+        // es un user
+        if (client.user === receiverUser.user_ID) {
+          const senderUser = await this.usersService.getUser(userName);
+          this.server.to(client.id).emit('message', {
+            ...finalData,
+            sender: senderUser,
+            receiver,
+          });
+        }
+      } else {
+        // es una room
+        room.members.forEach(async (member: number) => {
+          if (client.user === member) {
+            // el usuario member esta conectado?
+            const senderUser = await this.usersService.getUser(userName);
+            this.server.to(client.id).emit('message', {
+              ...finalData,
+              sender: senderUser,
+              receiver: null,
+            });
+          }
+        });
       }
     });
-    this.messageService.postMessage({
-      ...finalData,
-      receiver: receiverUser.user_ID,
-    });
+    receiverUser
+      ? this.messageService.postMessage({
+          ...finalData,
+          receiver: receiverUser.user_ID,
+        })
+      : this.messageService.postMessage({
+          ...finalData,
+          receiver: null,
+        });
   }
 
   @SubscribeMessage('createRoom')
