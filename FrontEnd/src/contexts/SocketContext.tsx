@@ -41,9 +41,21 @@ const SocketProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     if (socket) {
-      const allMessagesHandler = (data: Message) => {
-        data = { ...data, createdAt: dateISO, receiver: user.name };
-        setAllMessages((prevMessages) => [...prevMessages, data]);
+      const allMessagesHandler = (data: any) => {
+        const finalData = { ...data, createdAt: dateISO };
+        setAllMessages((prevMessages) => [...prevMessages, finalData]);
+        if (finalData.receiver === null) {
+          if (finalData.receiverName === userToSend)
+            setMessages((state: Message[]) => [
+              ...state,
+              { ...finalData, sender: finalData.sender.name },
+            ]);
+        } else {
+          setMessages((state: Message[]) => [
+            ...state,
+            { ...finalData, sender: finalData.sender.name },
+          ]);
+        }
       };
       socket.on("message", allMessagesHandler);
       return () => {
@@ -60,19 +72,6 @@ const SocketProvider = (props: ChildrenType) => {
       };
     }
   }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (socket) {
-      const messagesHandler = (data: Message) => {
-        data = { ...data, createdAt: dateISO, receiver: userToSend };
-        setMessages((state: Message[]) => [...state, data]);
-      };
-      socket.on("message", messagesHandler);
-      return () => {
-        socket.off("message", messagesHandler);
-      };
-    }
-  }, [userToSend]);
 
   return (
     <socketContext.Provider

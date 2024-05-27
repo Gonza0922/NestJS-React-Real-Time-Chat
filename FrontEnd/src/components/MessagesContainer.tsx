@@ -5,7 +5,7 @@ import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useUserContext } from "../contexts/UserContext.tsx";
 
 function MessagesContainer() {
-  const { user } = useUserContext();
+  const { user, isMembers } = useUserContext();
   const {
     socket,
     userToSend,
@@ -28,9 +28,10 @@ function MessagesContainer() {
         content: text,
         createdAt: dateISO,
         receiver: userToSend,
+        receiverName: userToSend,
       };
-      setMessages([...messages, completeData]);
-      setAllMessages([...allMessages, completeData]);
+      if (!isMembers.members) setMessages([...messages, completeData]);
+      setAllMessages([...allMessages, { ...completeData, sender: user }]);
       setText("");
     }
   };
