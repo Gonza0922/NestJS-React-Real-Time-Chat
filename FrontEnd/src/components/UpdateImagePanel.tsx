@@ -11,14 +11,16 @@ function UpdateImagePanel() {
     setPanel("chats");
   };
 
-  const handleImageChange = (e: any) => {
-    const selectedImage = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2)
-        setUpdateProfile({ ...updateProfile, url: reader.result, image: selectedImage });
-    };
-    if (selectedImage) reader.readAsDataURL(selectedImage);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedImage = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2)
+          setUpdateProfile({ ...updateProfile, url: reader.result, image: selectedImage });
+      };
+      if (selectedImage) reader.readAsDataURL(selectedImage);
+    }
   };
 
   const handleImageDelete = () => {

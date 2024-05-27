@@ -1,8 +1,8 @@
 import { FormEvent, useState } from "react";
-// import { Message } from "../interfaces/message.interfaces.ts";
 import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useUserContext } from "../contexts/UserContext.tsx";
+import { SenderStringMessage } from "../interfaces/message.interfaces.ts";
 
 function MessagesContainer() {
   const { user, isMembers } = useUserContext();
@@ -40,7 +40,7 @@ function MessagesContainer() {
     <div className="container">
       <nav className="navbar-chat">{userToSend}</nav>
       <div className="screen" ref={scrollRef}>
-        {messages.map((message: any, index: number) =>
+        {messages.map((message: SenderStringMessage, index: number) =>
           message.sender === user.name ? (
             <div key={index} className="right">
               <span className="sender">

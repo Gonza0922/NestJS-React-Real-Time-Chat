@@ -43,16 +43,16 @@ const SocketProvider = (props: ChildrenType) => {
     if (socket) {
       const allMessagesHandler = (data: any) => {
         const finalData = { ...data, createdAt: dateISO };
-        setAllMessages((prevMessages) => [...prevMessages, finalData]);
+        setAllMessages((prevAllMessages) => [...prevAllMessages, finalData]);
         if (finalData.receiver === null) {
           if (finalData.receiverName === userToSend)
-            setMessages((state: Message[]) => [
-              ...state,
+            setMessages((prevMessages) => [
+              ...prevMessages,
               { ...finalData, sender: finalData.sender.name },
             ]);
         } else {
-          setMessages((state: Message[]) => [
-            ...state,
+          setMessages((prevMessages) => [
+            ...prevMessages,
             { ...finalData, sender: finalData.sender.name },
           ]);
         }

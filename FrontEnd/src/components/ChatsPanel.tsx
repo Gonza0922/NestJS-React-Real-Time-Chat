@@ -3,6 +3,7 @@ import { useSocketContext } from "../contexts/SocketContext";
 import { useUserContext } from "../contexts/UserContext";
 import { UsersAndRooms } from "../interfaces/user.interfaces";
 import { getDateAndHours } from "../functions/getDateAndHours";
+import { Message } from "../interfaces/message.interfaces";
 
 function ChatsPanel() {
   const { user, setIsMembers } = useUserContext();
@@ -14,7 +15,7 @@ function ChatsPanel() {
     const lastMessage = allMessages
       .slice()
       .reverse()
-      .find((message: any) =>
+      .find((message: Message) =>
         message.receiver === null
           ? // room
             message.receiverName === receiver
