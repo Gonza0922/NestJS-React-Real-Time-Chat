@@ -449,6 +449,21 @@ body {
   font-size: 22px;
 }
 
+.navbar-chat-with-members {
+  position: relative;
+  padding: 20px 20px 30px 20px;
+  background-color: rgba(83, 83, 83, 0.301);
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.container-members {
+  min-width: 100%;
+  position: absolute;
+  margin-left: 20px;
+  transform: translateY(-28px);
+}
+
 .container {
   width: 850px;
   min-width: 380px;

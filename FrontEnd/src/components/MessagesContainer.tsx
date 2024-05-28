@@ -3,6 +3,7 @@ import { getDateAndHours } from "../functions/getDateAndHours.ts";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useUserContext } from "../contexts/UserContext.tsx";
 import { SenderStringMessage } from "../interfaces/message.interfaces.ts";
+import { RegisterData } from "../interfaces/user.interfaces.ts";
 
 function MessagesContainer() {
   const { user, isMembers } = useUserContext();
@@ -15,6 +16,7 @@ function MessagesContainer() {
     allMessages,
     setAllMessages,
     scrollRef,
+    roomMembers,
   } = useSocketContext();
   const [text, setText] = useState("");
 
@@ -38,7 +40,21 @@ function MessagesContainer() {
 
   return (
     <div className="container">
-      <nav className="navbar-chat">{userToSend}</nav>
+      {roomMembers.length > 0 ? (
+        <>
+          <nav className="navbar-chat-with-members">{userToSend}</nav>
+          <div className="container-members">
+            {roomMembers.map((member: RegisterData, index: number) => (
+              <span key={index} className="sender-content">
+                {member.name}
+                {", "}
+              </span>
+            ))}
+          </div>
+        </>
+      ) : (
+        <nav className="navbar-chat">{userToSend}</nav>
+      )}
       <div className="screen" ref={scrollRef}>
         {messages.map((message: SenderStringMessage, index: number) =>
           message.sender === user.name ? (

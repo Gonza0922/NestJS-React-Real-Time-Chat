@@ -1,10 +1,12 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
-import { ChildrenType } from "../interfaces/user.interfaces";
+import { ChildrenType, RegisterData } from "../interfaces/user.interfaces";
 import { Socket, io } from "socket.io-client";
 import { useUserContext } from "./UserContext";
 import { Message } from "../interfaces/message.interfaces";
 import { useGetAllMessages } from "../hooks/messages.hooks";
 import { getAllMessagesRequest } from "../api/messages.api";
+import { getRoomByNameRequest } from "../api/room.api";
+import { getUserIdRequest } from "../api/users.api";
 
 const socketContext = createContext<any>(undefined);
 
@@ -23,6 +25,23 @@ const SocketProvider = (props: ChildrenType) => {
   const [panel, setPanel] = useState("chats");
   const scrollRef = useRef<HTMLDivElement>(null);
   const dateISO = new Date().toISOString();
+  const [roomMembers, setRoomMembers] = useState<RegisterData[]>([]);
+
+  useEffect(() => {
+    const getMessagesReceiver = async () => {
+      const data = await getRoomByNameRequest(userToSend);
+      setRoomMembers([]);
+      if (data.length > 0) {
+        data[0].members.forEach(async (member_ID: number) => {
+          const dataMember = await getUserIdRequest(member_ID);
+          if (dataMember.name === user.name) {
+            setRoomMembers((prevState) => [...prevState, { ...dataMember, name: "Me" }]);
+          } else setRoomMembers((prevState) => [...prevState, dataMember]);
+        });
+      }
+    };
+    getMessagesReceiver();
+  }, [isMembers]);
 
   useEffect(() => {
     const getMessagesReceiver = async () => {
@@ -88,6 +107,7 @@ const SocketProvider = (props: ChildrenType) => {
         panel,
         setPanel,
         scrollRef,
+        roomMembers,
       }}
     >
       {props.children}
