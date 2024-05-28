@@ -219,6 +219,14 @@ body {
   margin-top: 20px;
 }
 
+.container-user-chat-none-content {
+  margin: 24px 0px;
+}
+
+.container-room-chat-content {
+  margin: 19px 0px;
+}
+
 .last-message-hour {
   color: grey;
   font-weight: bold;
@@ -241,6 +249,8 @@ body {
 .span-chats {
   cursor: pointer;
 }
+
+/* profile */
 
 .profile-image {
   width: 180px;
@@ -325,18 +335,67 @@ body {
   margin: 15px 15px 5px 15px;
 }
 
-.span-create-room {
-  display: inline-block;
-  width: 100%;
+.h3-create-room {
+  margin: 5px 0px;
 }
 
 .select-users {
   margin: 10px 0px;
 }
 
+/* room */
+
+.input-room-image-and-text-button {
+  display: flex;
+  align-items: center;
+}
+
+.room-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.input-and-room-image {
+  margin-top: 10px;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.input-and-room-image input[type="file"] {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.input-and-room-image:hover::after {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-color: rgba(87, 87, 87, 0.473);
+  border-radius: 50%;
+  content: "";
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.text-and-button {
+  width: 100%;
+}
+
 .input-room-name {
   background-color: rgb(255, 255, 255);
-  width: 65%;
+  width: 70%;
   border: none;
   outline: none;
   padding: 8px;
@@ -344,12 +403,17 @@ body {
   margin: 10px;
 }
 
+.input-room-name::placeholder {
+  color: rgb(175, 175, 175);
+}
+
 .button-create-room {
   background-color: #23a9d1;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 5px;
   cursor: pointer;
   border-radius: 2px;
+  font-weight: bold;
 }
 
 .button-create-room:hover {

@@ -106,30 +106,32 @@ function Chat() {
         ) : panel === "Rooms" ? (
           <form className="create-room" ref={scrollRef} onSubmit={roomHandleSubmit}>
             <div className="container-h2-span-input-button-h3">
-              <div className="container-input-and-profile-image">
-                <div className="input-and-profile-image">
-                  <input type="file" onChange={(e) => handleImageChange(e)} />
-                  <img src={room.url} alt="profile Image" className="profile-image" />
-                </div>
-              </div>
-              <h3>Create Room</h3>
+              <h3 className="h3-create-room">Create Room</h3>
               <div className="container-errors">
                 {error.length > 0 ? <div className="room-error">{error}</div> : <div></div>}
               </div>
-              <span className="span-create-room">Room Name</span>
-              <input
-                className="input-room-name"
-                id="input"
-                value={room.name}
-                type="text"
-                onChange={(e) => setRoom({ ...room, name: e.target.value })}
-                autoFocus
-                spellCheck
-                autoComplete="off"
-              />
-              <button type="submit" className="button-create-room">
-                Create Room
-              </button>
+              <div className="input-room-image-and-text-button">
+                <div className="input-and-room-image">
+                  <input type="file" onChange={(e) => handleImageChange(e)} />
+                  <img src={room.url} alt="room Image" className="room-image" />
+                </div>
+                <div className="text-and-button">
+                  <input
+                    className="input-room-name"
+                    id="input"
+                    value={room.name}
+                    placeholder="Room name"
+                    type="text"
+                    onChange={(e) => setRoom({ ...room, name: e.target.value })}
+                    autoFocus
+                    spellCheck
+                    autoComplete="off"
+                  />
+                  <button type="submit" className="button-create-room">
+                    Create
+                  </button>
+                </div>
+              </div>
               <h3 className="select-users">Select users:</h3>
             </div>
             {users.map((user: RegisterData, index: number) => (

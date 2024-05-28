@@ -49,31 +49,33 @@ function ChatsPanel() {
               <div className={conectedUsers.includes(receiver.name) ? "online" : "offline"}></div>
               <img className="user-image" src={receiver.image} alt="user-image" />
             </div>
-            <div className="container-user-chat-content">
-              <span className="sender-chat-span">{receiver.name}</span>
-              {lastMessageSender ? (
-                <>
-                  <p className="sender-content">
-                    {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
-                    {lastMessageContent &&
-                      (lastMessageContent.length <= 35
-                        ? lastMessageContent
-                        : `${lastMessageContent.substring(0, 35)}...`)}
-                  </p>
-                  <span className="last-message-hour">
-                    {getDateAndHours(lastMessageCreatedAt)}
-                  </span>
-                </>
-              ) : (
-                <>
-                  {Array.isArray(receiver.members) ? (
+            {lastMessageSender ? (
+              <div className="container-user-chat-content">
+                <span className="sender-chat-span">{receiver.name}</span>
+                <p className="sender-content">
+                  {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
+                  {lastMessageContent &&
+                    (lastMessageContent.length <= 35
+                      ? lastMessageContent
+                      : `${lastMessageContent.substring(0, 35)}...`)}
+                </p>
+                <span className="last-message-hour">{getDateAndHours(lastMessageCreatedAt)}</span>
+              </div>
+            ) : (
+              <>
+                {Array.isArray(receiver.members) ? (
+                  <div className="container-room-chat-content">
+                    <span className="sender-chat-span">{receiver.name}</span>
                     <p className="sender-content">New Room.</p>
-                  ) : (
-                    <p className="sender-content"></p>
-                  )}
-                </>
-              )}
-            </div>
+                  </div>
+                ) : (
+                  <div className="container-user-chat-none-content">
+                    <span className="sender-chat-span">{receiver.name}</span>
+                    <p className="sender-none-content"></p>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         );
       })}
