@@ -64,9 +64,12 @@ function ChatsPanel() {
             ) : (
               <>
                 {Array.isArray(receiver.members) ? (
-                  <div className="container-room-chat-content">
+                  <div className="container-user-chat-content">
                     <span className="sender-chat-span">{receiver.name}</span>
                     <p className="sender-content">New Room.</p>
+                    <span className="last-message-hour">
+                      {getDateAndHours(receiver.createdAt)}
+                    </span>
                   </div>
                 ) : (
                   <div className="container-user-chat-none-content">

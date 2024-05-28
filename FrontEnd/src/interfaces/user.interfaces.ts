@@ -10,6 +10,7 @@ export interface RegisterData {
   email: string;
   password: string;
   image: string;
+  createdAt: string;
 }
 
 export interface ChildrenType {
@@ -23,4 +24,5 @@ export interface UsersAndRooms {
   password: string;
   image: string;
   members?: number[];
+  createdAt: string;
 }
