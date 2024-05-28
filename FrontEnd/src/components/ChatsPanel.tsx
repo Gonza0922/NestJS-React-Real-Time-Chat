@@ -23,6 +23,8 @@ function ChatsPanel() {
             (message.sender.name === sender && message.receiverName === receiver) ||
             (message.sender.name === receiver && message.receiverName === sender)
       );
+    if (!lastMessage)
+      return [{ sender: { name: undefined }, content: undefined, createdAt: undefined }];
     const { content, sender: resultSender, createdAt: resultCreatedAt } = lastMessage;
     return [content, resultSender, resultCreatedAt];
   };
@@ -49,14 +51,28 @@ function ChatsPanel() {
             </div>
             <div className="container-user-chat-content">
               <span className="sender-chat-span">{receiver.name}</span>
-              <p className="sender-content">
-                {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
-                {lastMessageContent &&
-                  (lastMessageContent.length < 25
-                    ? lastMessageContent
-                    : `${lastMessageContent.substring(0, 25)}...`)}
-              </p>
-              <span className="last-message-hour">{getDateAndHours(lastMessageCreatedAt)}</span>
+              {lastMessageSender ? (
+                <>
+                  <p className="sender-content">
+                    {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
+                    {lastMessageContent &&
+                      (lastMessageContent.length <= 40
+                        ? lastMessageContent
+                        : `${lastMessageContent.substring(0, 40)}...`)}
+                  </p>
+                  <span className="last-message-hour">
+                    {getDateAndHours(lastMessageCreatedAt)}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {Array.isArray(receiver.members) ? (
+                    <p className="sender-content">New Room.</p>
+                  ) : (
+                    <p className="sender-content"></p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         );

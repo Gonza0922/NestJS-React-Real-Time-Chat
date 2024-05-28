@@ -8,10 +8,17 @@ import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
 
 function Chat() {
+  const roomDefaultImage =
+    "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1716411818/group-default-profile_f8ynlj.jpg";
   const { user, logout, updateProfile, setUpdateProfile, setError, error } = useUserContext();
   const { userToSend, messages, panel, setPanel, scrollRef, socket } = useSocketContext();
   const { users } = useGetAllUsers(user.name);
-  const [room, setRoom] = useState({ name: "", creator: user.user_ID });
+  const [room, setRoom] = useState<any>({
+    name: "",
+    creator: user.user_ID,
+    url: roomDefaultImage,
+    image: roomDefaultImage,
+  });
   const [members, setMembers] = useState<number[]>([]);
 
   useEffect(() => {
@@ -31,18 +38,35 @@ function Chat() {
     if (room.name === "") return setError("Required Room Name");
     if (members.length > 0) {
       setError({});
-      socket.emit("createRoom", room);
-      socket.emit("addClientToRoom", { ...room, members });
-      console.log({ ...room, members });
+      // guardar imagen creada de cloudinary en la db
+      //socket.emit("createRoom", room);
+      //socket.emit("addClientToRoom", { ...room, members });
+      console.log(room);
     } else return setError("You have to select any user to create a room");
     setMembers([]);
-    setRoom({ name: "", creator: user.user_ID });
+    setRoom({
+      ...room,
+      name: "",
+      creator: user.user_ID,
+      url: roomDefaultImage,
+      image: roomDefaultImage,
+    });
     setPanel("chats");
   };
 
-  const handleArray = (userId: number) => {
-    if (!members.includes(userId)) {
-      setMembers([...members, userId]);
+  const handleMembers = (userId: number) => {
+    if (!members.includes(userId)) setMembers([...members, userId]);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedImage = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2)
+          setRoom({ ...room, url: reader.result, image: selectedImage });
+      };
+      if (selectedImage) reader.readAsDataURL(selectedImage);
     }
   };
 
@@ -80,6 +104,12 @@ function Chat() {
         ) : panel === "Rooms" ? (
           <form className="create-room" ref={scrollRef} onSubmit={roomHandleSubmit}>
             <div className="container-h2-span-input-button-h3">
+              <div className="container-input-and-profile-image">
+                <div className="input-and-profile-image">
+                  <input type="file" onChange={(e) => handleImageChange(e)} />
+                  <img src={room.url} alt="profile Image" className="profile-image" />
+                </div>
+              </div>
               <h3>Create Room</h3>
               <div className="container-errors">
                 {error.length > 0 ? <div className="room-error">{error}</div> : <div></div>}
@@ -104,7 +134,7 @@ function Chat() {
               <div
                 key={index}
                 className={`sender-chat ${members.includes(user.user_ID) ? "selected" : ""}`}
-                onClick={() => handleArray(user.user_ID)}
+                onClick={() => handleMembers(user.user_ID)}
               >
                 <div className="container-image-and-online">
                   <img className="user-image" src={user.image} alt="user-image" />
