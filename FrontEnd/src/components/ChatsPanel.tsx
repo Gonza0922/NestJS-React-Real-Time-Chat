@@ -56,9 +56,9 @@ function ChatsPanel() {
                   <p className="sender-content">
                     {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
                     {lastMessageContent &&
-                      (lastMessageContent.length <= 40
+                      (lastMessageContent.length <= 35
                         ? lastMessageContent
-                        : `${lastMessageContent.substring(0, 40)}...`)}
+                        : `${lastMessageContent.substring(0, 35)}...`)}
                   </p>
                   <span className="last-message-hour">
                     {getDateAndHours(lastMessageCreatedAt)}

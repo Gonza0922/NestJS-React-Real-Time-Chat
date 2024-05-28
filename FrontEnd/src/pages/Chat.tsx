@@ -6,6 +6,7 @@ import UpdateImagePanel from "../components/UpdateImagePanel.tsx";
 import MessagesContainer from "../components/MessagesContainer.tsx";
 import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
+import { putRoomImageRequest } from "../api/images.api.ts";
 
 function Chat() {
   const roomDefaultImage =
@@ -39,9 +40,10 @@ function Chat() {
     if (members.length > 0) {
       setError({});
       // guardar imagen creada de cloudinary en la db
-      //socket.emit("createRoom", room);
-      //socket.emit("addClientToRoom", { ...room, members });
+      socket.emit("createRoom", room);
+      socket.emit("addClientToRoom", { ...room, members });
       console.log(room);
+      if (room.image !== room.url) putRoomImageRequest(room.name, room.image);
     } else return setError("You have to select any user to create a room");
     setMembers([]);
     setRoom({
