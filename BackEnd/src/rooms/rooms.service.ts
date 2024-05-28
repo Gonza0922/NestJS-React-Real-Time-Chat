@@ -15,10 +15,12 @@ export class RoomsService {
       .createQueryBuilder()
       .select('name')
       .addSelect('image')
+      .addSelect('createdAt')
       .addSelect('GROUP_CONCAT(memberUserID ORDER BY memberUserID)', 'members')
       .where('name = :roomName', { roomName })
       .groupBy('name')
       .addGroupBy('image')
+      .addGroupBy('createdAt')
       .getRawMany();
     findRooms.forEach((room) => {
       finalData.push({
@@ -37,12 +39,14 @@ export class RoomsService {
       .createQueryBuilder()
       .select('name')
       .addSelect('image')
+      .addSelect('createdAt')
       .addSelect('GROUP_CONCAT(memberUserID ORDER BY memberUserID)', 'members')
       .where('(memberUserID = :user_ID OR creatorUserID = :user_ID)', {
         user_ID,
       })
       .groupBy('name')
       .addGroupBy('image')
+      .addGroupBy('createdAt')
       .getRawMany();
     findRooms.forEach((room) => {
       finalData.push({

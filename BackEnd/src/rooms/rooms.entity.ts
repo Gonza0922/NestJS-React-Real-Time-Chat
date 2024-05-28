@@ -13,4 +13,6 @@ export class Room {
   member: number;
   @Column()
   image: string;
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

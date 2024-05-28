@@ -10,7 +10,7 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   getAllUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({ order: { name: 'ASC' } });
   }
   async getUser(user_ID: number) {
     const [findUser] = await this.userRepository.find({ where: { user_ID } });
