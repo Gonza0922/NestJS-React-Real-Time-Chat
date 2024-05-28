@@ -108,16 +108,16 @@ export class WebSocketsGateway
     @ConnectedSocket() socket: Socket,
     @MessageBody() data: CreateRoomDto,
   ) {
-    const { name, creator, image } = data;
+    const { name, creator } = data;
     socket.join(name);
     console.log(`Client ${socket.id} create room ${name}`);
-    this.roomsService.postRoom({ name, creator, members: [creator], image });
+    this.roomsService.postRoom({ name, creator, members: [creator] });
   }
 
   @SubscribeMessage('addClientToRoom')
   handleAddClientToRoom(@MessageBody() data: CreateRoomDto) {
     // { name: string, creator: number, members: number[], image: string }
-    const { name, creator, members, image } = data;
+    const { name, creator, members } = data;
     members.forEach((member) => {
       this.clients.forEach(async (client: ClientDto) => {
         if (member === client.user) {
@@ -126,6 +126,6 @@ export class WebSocketsGateway
         }
       });
     });
-    this.roomsService.postRoom({ name, creator, members, image });
+    this.roomsService.postRoom({ name, creator, members });
   }
 }

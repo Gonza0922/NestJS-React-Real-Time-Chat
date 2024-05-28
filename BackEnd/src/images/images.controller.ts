@@ -30,4 +30,12 @@ export class ImagesController {
   deleteImageByUserIdEndpoint(@Param('user_ID', ParseIntPipe) user_ID: number) {
     return this.imagesService.deleteImageByUserId(user_ID);
   }
+  @Put('/room/put/:roomName')
+  @UseInterceptors(FileInterceptor('image')) // 'image' debe coincidir con el nombre del campo del formulario
+  putImageByRoomEndpoint(
+    @Param('roomName') roomName: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.imagesService.putImageByRoom(roomName, file);
+  }
 }
