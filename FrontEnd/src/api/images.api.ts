@@ -16,6 +16,17 @@ export const putImageRequest = async (user_ID: number, file: File) => {
   return request.data;
 };
 
+export const putRoomImageRequest = async (roomName: string, file: File) => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const request = await axios.put(`/images/room/put/${roomName}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return request.data;
+};
+
 export const deleteImageRequest = async (user_ID: number) => {
   const request = await axios.delete(`/images/delete/${user_ID}`);
   return request.data;
