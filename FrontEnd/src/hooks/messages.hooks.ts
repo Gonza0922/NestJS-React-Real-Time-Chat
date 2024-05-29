@@ -19,11 +19,6 @@ export const useGetAllMessages = (
       if (data) {
         for (let i = 0; i < data.length; i++) {
           data[i].sender = data[i].sender.name;
-          if (data[i].receiver) {
-            data[i].receiver = data[i].receiver.name;
-          } else {
-            data[i].receiver = data[i].receiverName.name;
-          }
         }
       }
       console.log(data);

@@ -53,7 +53,7 @@ const SocketProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     const socket = io("http://localhost:3000", {
-      auth: { userName: user.user_ID, receiver: userToSend },
+      auth: { userName: user.user_ID, receiverName: userToSend },
     });
     setSocket(socket);
   }, [userToSend, isAuthenticated]);
@@ -63,7 +63,7 @@ const SocketProvider = (props: ChildrenType) => {
       const allMessagesHandler = (data: any) => {
         const finalData = { ...data, createdAt: dateISO };
         setAllMessages((prevAllMessages) => [...prevAllMessages, finalData]);
-        if (finalData.receiver === null) {
+        if (finalData.type === "room") {
           if (finalData.receiverName === userToSend)
             setMessages((prevMessages) => [
               ...prevMessages,

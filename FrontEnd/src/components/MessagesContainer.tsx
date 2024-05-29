@@ -29,7 +29,6 @@ function MessagesContainer() {
         sender: user.name,
         content: text,
         createdAt: dateISO,
-        receiver: userToSend,
         receiverName: userToSend,
       };
       if (!isMembers.members) setMessages([...messages, completeData]);

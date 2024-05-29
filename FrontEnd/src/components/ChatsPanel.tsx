@@ -10,18 +10,18 @@ function ChatsPanel() {
   const { conectedUsers, userToSend, setUserToSend, allMessages, scrollRef } = useSocketContext();
   const { usersAndRooms } = useGetAllUsersAndRooms(user.name);
 
-  const getLastMessage = (sender: string, receiver: string) => {
+  const getLastMessage = (sender: string, receiverName: string) => {
     if (!allMessages) return [undefined, undefined, undefined];
     const lastMessage = allMessages
       .slice()
       .reverse()
       .find((message: Message) =>
-        message.receiver === null
+        message.type === "room"
           ? // room
-            message.receiverName === receiver
+            message.receiverName === receiverName
           : // user
-            (message.sender.name === sender && message.receiverName === receiver) ||
-            (message.sender.name === receiver && message.receiverName === sender)
+            (message.sender.name === sender && message.receiverName === receiverName) ||
+            (message.sender.name === receiverName && message.receiverName === sender)
       );
     if (!lastMessage)
       return [{ sender: { name: undefined }, content: undefined, createdAt: undefined }];
@@ -31,27 +31,29 @@ function ChatsPanel() {
 
   return (
     <div className="chats" ref={scrollRef}>
-      {usersAndRooms.map((receiver: UsersAndRooms, index: number) => {
+      {usersAndRooms.map((userOrRoom: UsersAndRooms, index: number) => {
         const [lastMessageContent, lastMessageSender, lastMessageCreatedAt] = getLastMessage(
           user.name,
-          receiver.name
+          userOrRoom.name
         );
         return (
           <div
             key={index}
-            className={`sender-chat ${userToSend === receiver.name ? "selected" : ""}`}
+            className={`sender-chat ${userToSend === userOrRoom.name ? "selected" : ""}`}
             onClick={() => {
-              setIsMembers({ name: receiver.name, members: receiver.members });
-              setUserToSend(receiver.name);
+              setIsMembers({ name: userOrRoom.name, members: userOrRoom.members });
+              setUserToSend(userOrRoom.name);
             }}
           >
             <div className="container-image-and-online">
-              <div className={conectedUsers.includes(receiver.name) ? "online" : "offline"}></div>
-              <img className="user-image" src={receiver.image} alt="user-image" />
+              <div
+                className={conectedUsers.includes(userOrRoom.name) ? "online" : "offline"}
+              ></div>
+              <img className="user-image" src={userOrRoom.image} alt="user-image" />
             </div>
             {lastMessageSender ? (
               <div className="container-user-chat-content">
-                <span className="sender-chat-span">{receiver.name}</span>
+                <span className="sender-chat-span">{userOrRoom.name}</span>
                 <p className="sender-content">
                   {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
                   {lastMessageContent &&
@@ -63,17 +65,17 @@ function ChatsPanel() {
               </div>
             ) : (
               <>
-                {Array.isArray(receiver.members) ? (
+                {Array.isArray(userOrRoom.members) ? (
                   <div className="container-user-chat-content">
-                    <span className="sender-chat-span">{receiver.name}</span>
+                    <span className="sender-chat-span">{userOrRoom.name}</span>
                     <p className="sender-content">New Room.</p>
                     <span className="last-message-hour">
-                      {getDateAndHours(receiver.createdAt)}
+                      {getDateAndHours(userOrRoom.createdAt)}
                     </span>
                   </div>
                 ) : (
                   <div className="container-user-chat-none-content">
-                    <span className="sender-chat-span">{receiver.name}</span>
+                    <span className="sender-chat-span">{userOrRoom.name}</span>
                     <p className="sender-none-content"></p>
                   </div>
                 )}

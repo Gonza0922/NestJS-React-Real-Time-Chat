@@ -5,7 +5,7 @@ export interface Message {
   sender: RegisterData;
   content: string;
   createdAt: string;
-  receiver?: string;
+  type: string;
   receiverName: string;
 }
 
@@ -14,6 +14,6 @@ export interface SenderStringMessage {
   sender: string;
   content: string;
   createdAt: string;
-  receiver?: string;
+  type: string;
   receiverName: string;
 }
