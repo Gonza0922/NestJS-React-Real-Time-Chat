@@ -57,11 +57,11 @@ export class WebSocketsGateway
     @MessageBody() content: string,
   ) {
     let room: any;
-    const { userName, receiver } = socket.handshake.auth;
-    const finalData = { sender: userName, content, receiverName: receiver };
-    const receiverUser = await this.usersService.getUserByName(receiver); // si es un grupo no va a existir
+    const { userName, receiverName } = socket.handshake.auth;
+    const finalData = { sender: userName, content, receiverName };
+    const receiverUser = await this.usersService.getUserByName(receiverName); // si es un grupo no va a existir
     if (!receiverUser) {
-      const [findRoom] = await this.roomsService.getRoomByName(receiver);
+      const [findRoom] = await this.roomsService.getRoomByName(receiverName);
       //nos aseguramos de que el receiver es el nombre de una room existente
       room = findRoom;
     }
@@ -74,7 +74,7 @@ export class WebSocketsGateway
           this.server.to(client.id).emit('message', {
             ...finalData,
             sender: senderUser,
-            receiver,
+            type: 'user',
           });
         }
       } else {
@@ -86,7 +86,7 @@ export class WebSocketsGateway
             this.server.to(client.id).emit('message', {
               ...finalData,
               sender: senderUser,
-              receiver: null,
+              type: 'room',
             });
           }
         });
@@ -95,11 +95,11 @@ export class WebSocketsGateway
     receiverUser
       ? this.messageService.postMessage({
           ...finalData,
-          receiver: receiverUser.user_ID,
+          type: 'user',
         })
       : this.messageService.postMessage({
           ...finalData,
-          receiver: null,
+          type: 'room',
         });
   }
 
