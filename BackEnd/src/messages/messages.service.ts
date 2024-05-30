@@ -12,13 +12,13 @@ export class MessagesService {
     private usersService: UsersService,
   ) {}
   getAllMessages() {
-    return this.messageRepository.find({ relations: ['sender', 'receiver'] });
+    return this.messageRepository.find({ relations: ['sender'] });
   }
   async getMessagesByReceiver(authName: string, receiver: any) {
-    if (receiver !== 'none') {
+    if (receiver.name !== 'none') {
       if (typeof receiver.data === 'object') {
         return await this.messageRepository.find({
-          relations: ['sender', 'receiver'],
+          relations: ['sender'],
           where: { receiverName: receiver.name },
         });
       } else {
@@ -27,14 +27,15 @@ export class MessagesService {
           receiver.name,
         );
         const user1Id = user.user_ID;
+        const user1Name = user.name;
         const user2Id = receiverUser.user_ID;
+        const user2Name = receiver.name;
         return await this.messageRepository
           .createQueryBuilder('message')
           .leftJoinAndSelect('message.sender', 'sender')
-          .leftJoinAndSelect('message.receiver', 'receiver')
           .where(
-            '(message.sender = :user1Id AND message.receiver = :user2Id) OR (message.sender = :user2Id AND message.receiver = :user1Id)',
-            { user1Id, user2Id },
+            '(message.sender = :user1Id AND message.receiverName = :user2Name) OR (message.sender = :user2Id AND message.receiverName = :user1Name)',
+            { user1Id, user1Name, user2Id, user2Name },
           )
           .orderBy('message.message_ID', 'ASC')
           .getMany();
