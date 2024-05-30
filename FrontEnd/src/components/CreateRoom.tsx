@@ -17,7 +17,7 @@ function CreateRoom() {
     setRoom({ name: "", creator: user.user_ID, url: roomDefaultImage, image: roomDefaultImage });
   }, []);
 
-  const roomHandleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const roomHandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (room.name === "") return setError("Required Room Name");
     if (members.length > 0) {
@@ -25,15 +25,15 @@ function CreateRoom() {
       // guardar imagen creada de cloudinary en la db
       socket.emit("createRoom", room);
       socket.emit("addClientToRoom", { ...room, members });
-      if (room.image !== room.url) putRoomImageRequest(room.name, room.image);
+      if (room.image !== room.url) await putRoomImageRequest(room.name, room.image);
     } else return setError("You have to select any user to create a room");
     setMembers([]);
+    setPanel("chats");
     setRoom({
       ...room,
       name: "",
       creator: user.user_ID,
     });
-    setPanel("chats");
   };
 
   const handleMembers = (userId: number) => {

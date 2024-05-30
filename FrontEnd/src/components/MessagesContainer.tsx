@@ -46,7 +46,7 @@ function MessagesContainer() {
             {roomMembers.map((member: RegisterData, index: number) => (
               <span key={index} className="sender-content">
                 {member.name}
-                {", "}
+                {roomMembers.length !== index + 1 ? ", " : ""}
               </span>
             ))}
           </div>

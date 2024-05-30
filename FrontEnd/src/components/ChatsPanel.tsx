@@ -36,7 +36,6 @@ function ChatsPanel() {
           user.name,
           userOrRoom.name
         );
-        if (userOrRoom.members) console.log(userOrRoom);
         return (
           <div
             key={index}
