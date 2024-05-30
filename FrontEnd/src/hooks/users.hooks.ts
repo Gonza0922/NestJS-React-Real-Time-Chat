@@ -20,8 +20,7 @@ export const useGetAllUsers = (authName: string) => {
 };
 
 export const useGetAllUsersAndRooms = (authName: string) => {
-  const [usersAndRooms, setUsersAndRooms] = useState<RegisterData[]>([]);
-  const { socket } = useSocketContext();
+  const { socket, usersAndRooms, setUsersAndRooms } = useSocketContext();
   const { user } = useUserContext();
   useEffect(() => {
     const getAllUsersAndRooms = async () => {

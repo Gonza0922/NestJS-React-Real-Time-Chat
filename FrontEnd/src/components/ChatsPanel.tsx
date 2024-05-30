@@ -36,6 +36,7 @@ function ChatsPanel() {
           user.name,
           userOrRoom.name
         );
+        if (userOrRoom.members) console.log(userOrRoom);
         return (
           <div
             key={index}
@@ -57,9 +58,9 @@ function ChatsPanel() {
                 <p className="sender-content">
                   {lastMessageSender.name === user.name ? "Me" : lastMessageSender.name}:{" "}
                   {lastMessageContent &&
-                    (lastMessageContent.length <= 35
+                    (lastMessageContent.length <= 32
                       ? lastMessageContent
-                      : `${lastMessageContent.substring(0, 35)}...`)}
+                      : `${lastMessageContent.substring(0, 32)}...`)}
                 </p>
                 <span className="last-message-hour">{getDateAndHours(lastMessageCreatedAt)}</span>
               </div>

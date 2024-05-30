@@ -26,6 +26,8 @@ const SocketProvider = (props: ChildrenType) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const dateISO = new Date().toISOString();
   const [roomMembers, setRoomMembers] = useState<RegisterData[]>([]);
+  const [room, setRoom] = useState({ name: "" });
+  const [usersAndRooms, setUsersAndRooms] = useState<RegisterData[]>([]);
 
   useEffect(() => {
     const getMessagesReceiver = async () => {
@@ -92,6 +94,20 @@ const SocketProvider = (props: ChildrenType) => {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (socket) {
+      const addClientToRoomHandler = (data: any) => {
+        console.log({ ...data, createdAt: dateISO });
+        const finalData = { ...data, createdAt: dateISO };
+        setUsersAndRooms((prevState) => [...prevState, finalData]);
+      };
+      socket.on("addClientToRoom", addClientToRoomHandler);
+      return () => {
+        socket.off("addClientToRoom", addClientToRoomHandler);
+      };
+    }
+  }, [socket]);
+
   return (
     <socketContext.Provider
       value={{
@@ -108,6 +124,10 @@ const SocketProvider = (props: ChildrenType) => {
         setPanel,
         scrollRef,
         roomMembers,
+        room,
+        setRoom,
+        usersAndRooms,
+        setUsersAndRooms,
       }}
     >
       {props.children}

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useSocketContext } from "../contexts/SocketContext.tsx";
 import { useUserContext } from "../contexts/UserContext.tsx";
 import { RegisterData } from "../interfaces/user.interfaces.ts";
@@ -9,15 +9,13 @@ function CreateRoom() {
   const roomDefaultImage =
     "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1716411818/group-default-profile_f8ynlj.jpg";
   const { user, setError, error } = useUserContext();
-  const { setPanel, scrollRef, socket } = useSocketContext();
+  const { setPanel, scrollRef, socket, room, setRoom } = useSocketContext();
   const { users } = useGetAllUsers(user.name);
-  const [room, setRoom] = useState<any>({
-    name: "",
-    creator: user.user_ID,
-    url: roomDefaultImage,
-    image: roomDefaultImage,
-  });
   const [members, setMembers] = useState<number[]>([]);
+
+  useEffect(() => {
+    setRoom({ name: "", creator: user.user_ID, url: roomDefaultImage, image: roomDefaultImage });
+  }, []);
 
   const roomHandleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,7 +25,6 @@ function CreateRoom() {
       // guardar imagen creada de cloudinary en la db
       socket.emit("createRoom", room);
       socket.emit("addClientToRoom", { ...room, members });
-      console.log(room);
       if (room.image !== room.url) putRoomImageRequest(room.name, room.image);
     } else return setError("You have to select any user to create a room");
     setMembers([]);
@@ -35,8 +32,6 @@ function CreateRoom() {
       ...room,
       name: "",
       creator: user.user_ID,
-      url: roomDefaultImage,
-      image: roomDefaultImage,
     });
     setPanel("chats");
   };
