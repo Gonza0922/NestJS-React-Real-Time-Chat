@@ -1,7 +1,6 @@
 import { useGetAllUsersAndRooms } from "../hooks/users.hooks";
 import { useSocketContext } from "../contexts/SocketContext";
 import { useUserContext } from "../contexts/UserContext";
-import { UsersAndRooms } from "../interfaces/user.interfaces";
 import { getDateAndHours } from "../functions/getDateAndHours";
 import { Message } from "../interfaces/message.interfaces";
 
@@ -31,7 +30,7 @@ function ChatsPanel() {
 
   return (
     <div className="chats" ref={scrollRef}>
-      {usersAndRooms.map((userOrRoom: UsersAndRooms, index: number) => {
+      {usersAndRooms.map((userOrRoom: any, index: number) => {
         const [lastMessageContent, lastMessageSender, lastMessageCreatedAt] = getLastMessage(
           user.name,
           userOrRoom.name
@@ -68,7 +67,11 @@ function ChatsPanel() {
                 {Array.isArray(userOrRoom.members) ? (
                   <div className="container-user-chat-content">
                     <span className="sender-chat-span">{userOrRoom.name}</span>
-                    <p className="sender-content">New Room.</p>
+                    <p className="sender-content">
+                      {userOrRoom.creator === user.user_ID
+                        ? `You created group "${userOrRoom.name}".`
+                        : "You were added."}
+                    </p>
                     <span className="last-message-hour">
                       {getDateAndHours(userOrRoom.createdAt)}
                     </span>
