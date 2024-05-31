@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from './messages.entity';
 import { Repository } from 'typeorm';
-import { CreateMessageDto } from './messages.dto';
+import { CreateMessageDto, finalReceiverDto } from './messages.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class MessagesService {
   getAllMessages() {
     return this.messageRepository.find({ relations: ['sender'] });
   }
-  async getMessagesByReceiver(authName: string, receiver: any) {
+  async getMessagesByReceiver(authName: string, receiver: finalReceiverDto) {
     if (receiver.name !== 'none') {
       if (typeof receiver.data === 'object') {
         return await this.messageRepository.find({

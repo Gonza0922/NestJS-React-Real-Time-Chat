@@ -37,10 +37,6 @@ export class LoginUserDto {
   password: string;
 }
 
-export interface Password {
-  password: string;
-}
-
 export class UpdateUserDto {
   @IsOptional()
   @IsString()

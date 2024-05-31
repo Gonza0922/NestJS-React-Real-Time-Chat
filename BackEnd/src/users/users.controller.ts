@@ -10,7 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Password, UpdateUserDto } from './users.dto';
+import { UpdateUserDto } from './users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +28,7 @@ export class UsersController {
     return this.userService.getUserByName(name);
   }
   @Post('/post/password')
-  getUserByPasswordEndpoint(@Body() hash: Password) {
+  getUserByPasswordEndpoint(@Body() hash: { password: string }) {
     return this.userService.getUserByPassword(hash.password);
   }
   @Put('/put/:user_ID')

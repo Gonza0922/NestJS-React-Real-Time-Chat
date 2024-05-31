@@ -4,6 +4,7 @@ export interface CreateMessageDto {
   type: string;
 }
 
-export interface sender {
-  sender: string;
+export interface finalReceiverDto {
+  name: string;
+  data: number[] | undefined;
 }

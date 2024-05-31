@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './rooms.entity';
 import { Repository } from 'typeorm';
-import { CreateRoomDto } from './rooms.dto';
+import { CompleteRoomWithMembersInStringDto, CreateRoomDto } from './rooms.dto';
 
 @Injectable()
 export class RoomsService {
@@ -10,7 +10,7 @@ export class RoomsService {
     @InjectRepository(Room) private roomRepository: Repository<Room>,
   ) {}
 
-  private formatRooms(rooms: any[]) {
+  private formatRooms(rooms: CompleteRoomWithMembersInStringDto[]) {
     return rooms.map((room) => ({
       ...room,
       members: room.members
@@ -30,7 +30,6 @@ export class RoomsService {
       .addGroupBy('createdAt')
       .addGroupBy('creator')
       .getRawMany();
-
     return this.formatRooms(findRooms);
   }
 

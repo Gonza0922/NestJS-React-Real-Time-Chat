@@ -12,7 +12,7 @@ import { MessagesService } from 'src/messages/messages.service';
 import { ClientDto } from './websockets.dto';
 import { UsersService } from 'src/users/users.service';
 import { RoomsService } from 'src/rooms/rooms.service';
-import { CreateRoomDto } from 'src/rooms/rooms.dto';
+import { CompleteRoomDto, CreateRoomDto } from 'src/rooms/rooms.dto';
 
 @WebSocketGateway({ cors: 'http://localhost:5173' })
 export class WebSocketsGateway
@@ -56,7 +56,7 @@ export class WebSocketsGateway
     @ConnectedSocket() socket: Socket,
     @MessageBody() content: string,
   ) {
-    let room: any;
+    let room: CompleteRoomDto;
     const { userName, receiverName } = socket.handshake.auth;
     const finalData = { sender: userName, content, receiverName };
     const receiverUser = await this.usersService.getUserByName(receiverName); // si es un grupo no va a existir
@@ -106,7 +106,7 @@ export class WebSocketsGateway
   @SubscribeMessage('createRoom')
   async createRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() data: any,
+    @MessageBody() data: CreateRoomDto,
   ) {
     const { name, creator } = data;
     socket.join(name);
@@ -115,10 +115,9 @@ export class WebSocketsGateway
   }
 
   @SubscribeMessage('addClientToRoom')
-  async handleAddClientToRoom(@MessageBody() data: any) {
-    // { name: string, creator: number, members: number[], image: string }
+  async handleAddClientToRoom(@MessageBody() data: CreateRoomDto) {
     const { name, creator, members } = data;
-    members.forEach((member: any) => {
+    members.forEach((member: number) => {
       this.clients.forEach(async (client: ClientDto) => {
         if (member === client.user) {
           client.socket.join(name);
