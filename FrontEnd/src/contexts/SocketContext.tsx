@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext, useRef } from "react";
-import { ChildrenType, RegisterData } from "../interfaces/user.interfaces";
+import { ChildrenType, RegisterData, UsersAndRooms } from "../interfaces/user.interfaces";
 import { Socket, io } from "socket.io-client";
 import { useUserContext } from "./UserContext";
 import { Message } from "../interfaces/message.interfaces";
@@ -96,7 +96,7 @@ const SocketProvider = (props: ChildrenType) => {
 
   useEffect(() => {
     if (socket) {
-      const addClientToRoomHandler = (data: any) => {
+      const addClientToRoomHandler = (data: UsersAndRooms) => {
         console.log({ ...data, createdAt: dateISO });
         const finalData = { ...data, createdAt: dateISO };
         setUsersAndRooms((prevState) => [...prevState, finalData]);

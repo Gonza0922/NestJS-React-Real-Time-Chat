@@ -23,6 +23,7 @@ export interface UsersAndRooms {
   email: string;
   password: string;
   image: string;
-  members?: number[];
+  members: number[];
   createdAt: string;
+  creator: number;
 }

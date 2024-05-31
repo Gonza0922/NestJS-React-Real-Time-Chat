@@ -3,6 +3,7 @@ import { useSocketContext } from "../contexts/SocketContext";
 import { useUserContext } from "../contexts/UserContext";
 import { getDateAndHours } from "../functions/getDateAndHours";
 import { Message } from "../interfaces/message.interfaces";
+import { UsersAndRooms } from "../interfaces/user.interfaces";
 
 function ChatsPanel() {
   const { user, setIsMembers } = useUserContext();
@@ -30,7 +31,7 @@ function ChatsPanel() {
 
   return (
     <div className="chats" ref={scrollRef}>
-      {usersAndRooms.map((userOrRoom: any, index: number) => {
+      {usersAndRooms.map((userOrRoom: UsersAndRooms, index: number) => {
         const [lastMessageContent, lastMessageSender, lastMessageCreatedAt] = getLastMessage(
           user.name,
           userOrRoom.name
