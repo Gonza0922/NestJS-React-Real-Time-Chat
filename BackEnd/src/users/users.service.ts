@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -9,26 +9,75 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
   getAllUsers() {
-    return this.userRepository.find({ order: { name: 'ASC' } });
+    try {
+      return this.userRepository.find({ order: { name: 'ASC' } });
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering all users',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async getUser(user_ID: number) {
-    const [findUser] = await this.userRepository.find({ where: { user_ID } });
-    return findUser;
+    try {
+      const findUser = await this.userRepository.findOne({
+        where: { user_ID },
+      });
+      return findUser;
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering user by user_ID',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async getUserByName(name: string) {
-    const [findUser] = await this.userRepository.find({ where: { name } });
-    return findUser;
+    try {
+      const findUser = await this.userRepository.findOne({ where: { name } });
+      return findUser;
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering user by name',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async getUserByPassword(password: string) {
-    const [findUser] = await this.userRepository.find({ where: { password } });
-    return findUser;
+    try {
+      const findUser = await this.userRepository.findOne({
+        where: { password },
+      });
+      return findUser;
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering user by password',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async putUserById(user_ID: number, data: UpdateUserDto) {
-    await this.userRepository.update(
-      { user_ID },
-      { name: data.name, email: data.email },
-    );
-    return this.userRepository.find({ where: { user_ID } });
+    try {
+      await this.userRepository.update(
+        { user_ID },
+        { name: data.name, email: data.email },
+      );
+      return this.userRepository.findOne({ where: { user_ID } });
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error updating user by user_ID',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

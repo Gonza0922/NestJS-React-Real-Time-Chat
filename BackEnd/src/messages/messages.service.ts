@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from './messages.entity';
 import { Repository } from 'typeorm';
@@ -11,11 +11,21 @@ export class MessagesService {
     @InjectRepository(Message) private messageRepository: Repository<Message>,
     private usersService: UsersService,
   ) {}
+
   getAllMessages() {
-    return this.messageRepository.find({ relations: ['sender'] });
+    try {
+      return this.messageRepository.find({ relations: ['sender'] });
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering all messages',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
+
   async getMessagesByReceiver(authName: string, receiver: finalReceiverDto) {
-    if (receiver.name !== 'none') {
+    try {
       if (typeof receiver.data === 'object') {
         return await this.messageRepository.find({
           relations: ['sender'],
@@ -40,10 +50,25 @@ export class MessagesService {
           .orderBy('message.message_ID', 'ASC')
           .getMany();
       }
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error recovering message by receiver',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
+
   postMessage(newMessage: CreateMessageDto) {
-    const newMessageCreated = this.messageRepository.create(newMessage);
-    return this.messageRepository.save(newMessageCreated);
+    try {
+      const newMessageCreated = this.messageRepository.create(newMessage);
+      return this.messageRepository.save(newMessageCreated);
+    } catch (e) {
+      console.error(e);
+      throw new HttpException(
+        'Error creating message',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
