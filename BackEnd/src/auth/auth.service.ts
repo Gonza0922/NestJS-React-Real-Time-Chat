@@ -30,7 +30,7 @@ export class AuthService {
       const payload = { user_ID: userSaved.user_ID };
       const UserToken = await this.jwtService.signAsync(payload);
       res.cookie('UserToken', UserToken);
-      throw new HttpException(userSaved, HttpStatus.CREATED);
+      res.status(201).json(userSaved);
     } catch (e) {
       console.error(e);
       throw new HttpException(
@@ -52,7 +52,7 @@ export class AuthService {
       const payload = { user_ID: findUser[0].user_ID };
       const UserToken = await this.jwtService.signAsync(payload);
       res.cookie('UserToken', UserToken);
-      throw new HttpException(findUser[0], HttpStatus.OK);
+      res.status(200).json(findUser[0]);
     } catch (e) {
       console.error(e);
       throw new HttpException('Login error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,7 +62,7 @@ export class AuthService {
   async signOut(res: Response) {
     try {
       res.cookie('UserToken', '', { expires: new Date(0) });
-      throw new HttpException('Disconnected', HttpStatus.OK);
+      res.status(200).json({ message: 'Disconnected' });
     } catch (e) {
       console.error(e);
       throw new HttpException('Logout error', HttpStatus.INTERNAL_SERVER_ERROR);

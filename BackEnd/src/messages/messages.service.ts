@@ -33,9 +33,13 @@ export class MessagesService {
         });
       } else {
         const user = await this.usersService.getUserByPassword(authName);
+        if (!user)
+          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         const receiverUser = await this.usersService.getUserByName(
           receiver.name,
         );
+        if (!receiverUser)
+          throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
         const user1Id = user.user_ID;
         const user1Name = user.name;
         const user2Id = receiverUser.user_ID;

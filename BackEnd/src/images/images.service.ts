@@ -34,6 +34,8 @@ export class ImagesService {
       const findUser = await this.userRepository.findOne({
         where: { user_ID },
       });
+      if (!findUser)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       if (findUser.image !== process.env.NONE_IMAGE)
         destroyImageCloudinary(findUser);
       const response = await this.cloudinaryService.uploadFile(file); // Create image in cloudinary
@@ -56,6 +58,8 @@ export class ImagesService {
       const findUser = await this.userRepository.findOne({
         where: { user_ID },
       });
+      if (!findUser)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       if (findUser.image !== process.env.NONE_IMAGE)
         destroyImageCloudinary(findUser);
       this.userRepository.update(
@@ -79,10 +83,12 @@ export class ImagesService {
         { name: room },
         { image: response.secure_url },
       );
-      const findUserchanged = await this.roomRepository.findOne({
+      const findUserChanged = await this.roomRepository.findOne({
         where: { name: room },
       });
-      return { room, newImage: findUserchanged.image };
+      if (!findUserChanged)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      return { room, newImage: findUserChanged.image };
     } catch (e) {
       console.error(e);
       throw new HttpException(

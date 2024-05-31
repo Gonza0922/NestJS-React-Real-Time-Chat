@@ -24,10 +24,9 @@ export class UsersService {
 
   async getUser(user_ID: number) {
     try {
-      const findUser = await this.userRepository.findOne({
+      return await this.userRepository.findOne({
         where: { user_ID },
       });
-      return findUser;
     } catch (e) {
       console.error(e);
       throw new HttpException(
@@ -39,8 +38,7 @@ export class UsersService {
 
   async getUserByName(name: string) {
     try {
-      const findUser = await this.userRepository.findOne({ where: { name } });
-      return findUser;
+      return await this.userRepository.findOne({ where: { name } });
     } catch (e) {
       console.error(e);
       throw new HttpException(
@@ -52,10 +50,9 @@ export class UsersService {
 
   async getUserByPassword(password: string) {
     try {
-      const findUser = await this.userRepository.findOne({
+      return await this.userRepository.findOne({
         where: { password },
       });
-      return findUser;
     } catch (e) {
       console.error(e);
       throw new HttpException(
