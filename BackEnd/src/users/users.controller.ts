@@ -4,14 +4,16 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Post,
   Put,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './users.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
@@ -26,10 +28,6 @@ export class UsersController {
   @Get('/user_ID/get/:name')
   getUserByNameEndpoint(@Param() name: string) {
     return this.userService.getUserByName(name);
-  }
-  @Post('/post/password')
-  getUserByPasswordEndpoint(@Body() hash: { password: string }) {
-    return this.userService.getUserByPassword(hash.password);
   }
   @Put('/put/:user_ID')
   @UsePipes(new ValidationPipe())
