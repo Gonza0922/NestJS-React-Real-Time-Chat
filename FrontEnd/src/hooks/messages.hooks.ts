@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { getMessagesReceiverRequest } from "../api/messages.api";
 import { Message } from "../interfaces/message.interfaces";
 
-export const useGetAllMessages = (
-  receiver: { name: string; members: number[] | undefined },
-  authName: string | null
-) => {
+export const useGetAllMessages = (receiver: { name: string; members: number[] | undefined }) => {
   let finalReceiver;
   receiver && receiver.members
     ? (finalReceiver = { data: receiver.members, name: receiver.name })
@@ -14,8 +11,7 @@ export const useGetAllMessages = (
   useEffect(() => {
     setMessages([]);
     const getMessagesReceiver = async () => {
-      const send = { finalReceiver, authName };
-      let data = await getMessagesReceiverRequest(send);
+      let data = await getMessagesReceiverRequest(finalReceiver);
       if (data) {
         for (let i = 0; i < data.length; i++) {
           data[i].sender = data[i].sender.name;

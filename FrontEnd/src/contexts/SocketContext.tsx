@@ -16,9 +16,8 @@ export function useSocketContext() {
 
 const SocketProvider = (props: ChildrenType) => {
   const { user, isAuthenticated, isMembers } = useUserContext();
-  const token = sessionStorage.getItem("token");
   const [userToSend, setUserToSend] = useState("none");
-  const { messages, setMessages } = useGetAllMessages(isMembers, token);
+  const { messages, setMessages } = useGetAllMessages(isMembers);
   const [conectedUsers, setConectedUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket>();
   const [allMessages, setAllMessages] = useState<Message[]>([]);
@@ -128,6 +127,7 @@ const SocketProvider = (props: ChildrenType) => {
         setRoom,
         usersAndRooms,
         setUsersAndRooms,
+        setRoomMembers,
       }}
     >
       {props.children}

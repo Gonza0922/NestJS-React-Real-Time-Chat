@@ -15,12 +15,24 @@ export const loginUserRequest = async (user: LoginUserDto) => {
 
 export const logoutUserRequest = async () => {
   //Log out a user
-  const request = await axios.post("/auth/logout");
+  const request = await axios.post(
+    "/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
   return request.data;
 };
 
 export const verifyTokenUserRequest = async () => {
   //Check if the UserToken exists/matches to enter the user account
-  const request = await axios.get("/auth/verify");
+  const request = await axios.get("/auth/verify", {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
   return request.data;
 };

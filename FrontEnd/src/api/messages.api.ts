@@ -7,14 +7,22 @@ export const getAllMessagesRequest = async () => {
   return request.data;
 };
 
-export const getMessagesReceiverRequest = async (data: object) => {
+export const getMessagesReceiverRequest = async (finalReceiver: any) => {
   //Select all messages from a sender and receiverObject
-  const request = await axios.post("/messages/getByReceiver", data);
+  const request = await axios.post("/messages/getByReceiver", finalReceiver, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
   return request.data;
 };
 
 export const postMessagesRequest = async (newData: Message) => {
   //Create a message
-  const request = await axios.post("/messages/post", newData);
+  const request = await axios.post("/messages/post", newData, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
   return request.data;
 };

@@ -1,7 +1,11 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { registerUserRequest, loginUserRequest, logoutUserRequest } from "../api/auth.api";
+import {
+  registerUserRequest,
+  loginUserRequest,
+  logoutUserRequest,
+  verifyTokenUserRequest,
+} from "../api/auth.api";
 import { ChildrenType, LoginData, RegisterData } from "../interfaces/user.interfaces";
-import { getUserPasswordRequest } from "../api/users.api";
 
 const userContext = createContext<any>(undefined);
 
@@ -28,10 +32,10 @@ const UserProvider = (props: ChildrenType) => {
   const login = async (user: LoginData) => {
     try {
       const data = await loginUserRequest(user);
-      setUser(data);
+      setUser(data.user);
       setIsAuthenticated(true);
       console.log(data);
-      sessionStorage.setItem("token", data.password);
+      sessionStorage.setItem("token", data.token);
     } catch (error: any) {
       console.log(error);
       const e = error.response.data;
@@ -42,10 +46,10 @@ const UserProvider = (props: ChildrenType) => {
   const signUp = async (user: RegisterData) => {
     try {
       const data = await registerUserRequest(user);
-      setUser(data);
+      setUser(data.user);
       setIsAuthenticated(true);
       console.log(data);
-      sessionStorage.setItem("token", data.password);
+      sessionStorage.setItem("token", data.token);
     } catch (error: any) {
       console.log(error);
       const e = error.response.data;
@@ -55,7 +59,6 @@ const UserProvider = (props: ChildrenType) => {
 
   const logout = async () => {
     try {
-      location.reload();
       await logoutUserRequest();
       setUser({});
       setIsAuthenticated(false);
@@ -69,9 +72,8 @@ const UserProvider = (props: ChildrenType) => {
     const verify = async () => {
       const session = sessionStorage.getItem("token");
       if (!session) return setIsAuthenticated(false);
-      if (session.length !== 60) return setIsAuthenticated(false);
       try {
-        const property = await getUserPasswordRequest(session);
+        const property = await verifyTokenUserRequest();
         setUser(property);
         setIsAuthenticated(true);
       } catch (error) {
