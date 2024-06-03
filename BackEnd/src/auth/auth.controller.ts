@@ -32,6 +32,7 @@ export class AuthController {
     return this.authService.signIn(res, user);
   }
   @Post('/logout')
+  @UseGuards(AuthGuard)
   logoutUser(@Res() res: Response) {
     return this.authService.signOut(res);
   }

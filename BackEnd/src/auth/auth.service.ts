@@ -29,14 +29,10 @@ export class AuthService {
       const userSaved = await this.userRepository.save(userCreated);
       const payload = { user_ID: userSaved.user_ID };
       const UserToken = await this.jwtService.signAsync(payload);
-      res.cookie('UserToken', UserToken);
-      res.status(201).json(userSaved);
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error Sign Up',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      res.status(201).json({ user: userSaved, token: UserToken });
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -51,21 +47,19 @@ export class AuthService {
         throw new HttpException('Incorrect Password', HttpStatus.BAD_REQUEST);
       const payload = { user_ID: findUser[0].user_ID };
       const UserToken = await this.jwtService.signAsync(payload);
-      res.cookie('UserToken', UserToken);
-      res.status(200).json(findUser[0]);
-    } catch (e) {
-      console.error(e);
-      throw new HttpException('Login error', HttpStatus.INTERNAL_SERVER_ERROR);
+      res.status(200).json({ user: findUser[0], token: UserToken });
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   async signOut(res: Response) {
     try {
-      res.cookie('UserToken', '', { expires: new Date(0) });
       res.status(200).json({ message: 'Disconnected' });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException('Logout error', HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

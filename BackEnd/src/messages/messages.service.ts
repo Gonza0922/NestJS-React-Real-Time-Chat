@@ -24,7 +24,7 @@ export class MessagesService {
     }
   }
 
-  async getMessagesByReceiver(authName: string, receiver: finalReceiverDto) {
+  async getMessagesByReceiver(req: Request, receiver: finalReceiverDto) {
     try {
       if (typeof receiver.data === 'object') {
         return await this.messageRepository.find({
@@ -32,7 +32,7 @@ export class MessagesService {
           where: { receiverName: receiver.name },
         });
       } else {
-        const user = await this.usersService.getUserByPassword(authName);
+        const user = req['user'];
         if (!user)
           throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         const receiverUser = await this.usersService.getUserByName(
@@ -54,12 +54,9 @@ export class MessagesService {
           .orderBy('message.message_ID', 'ASC')
           .getMany();
       }
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering message by receiver',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -67,12 +64,9 @@ export class MessagesService {
     try {
       const newMessageCreated = this.messageRepository.create(newMessage);
       return this.messageRepository.save(newMessageCreated);
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error creating message',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
