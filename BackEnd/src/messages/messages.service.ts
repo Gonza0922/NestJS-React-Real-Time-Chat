@@ -12,15 +12,46 @@ export class MessagesService {
     private usersService: UsersService,
   ) {}
 
-  getAllMessages() {
+  async getAllMessages(req: Request) {
     try {
-      return this.messageRepository.find({ relations: ['sender'] });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering all messages',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const { user_ID, name } = req['user'];
+      const authUserMessages = await this.messageRepository
+        .createQueryBuilder('message')
+        .leftJoinAndSelect('message.sender', 'sender')
+        .where(
+          '(message.sender = :user_ID) OR (message.receiverName = :name)',
+          { user_ID, name },
+        )
+        .orderBy('message.message_ID', 'ASC')
+        .getMany();
+      const authUserRoomsMessages = authUserMessages.filter(
+        (element) => element.type === 'room',
       );
+      const promises = authUserRoomsMessages.map((message) => {
+        if (message.receiverName) {
+          return this.messageRepository.find({
+            relations: ['sender'],
+            where: { receiverName: message.receiverName },
+          });
+        } else {
+          return Promise.resolve(undefined);
+        }
+      });
+      const results = await Promise.all(promises);
+      const finalAuthUserRoomsMessages = results
+        .filter((result) => result !== undefined)
+        .flat();
+      const finalAuthUserMessages = authUserMessages.filter(
+        (message) =>
+          !authUserRoomsMessages.some(
+            (authUserRoomsMessage) =>
+              authUserRoomsMessage.receiverName === message.receiverName,
+          ),
+      );
+      return [...finalAuthUserMessages, ...finalAuthUserRoomsMessages];
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
