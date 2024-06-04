@@ -40,12 +40,9 @@ export class WebSocketsGateway
           this.usersHandle.push(user.name);
         this.server.emit('getOnlineUsers', this.usersHandle);
       }
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'connect emit Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -61,12 +58,9 @@ export class WebSocketsGateway
         );
         this.server.emit('getOnlineUsers', this.usersHandle);
       }
-    } catch (e) {
-      console.log(e);
-      throw new HttpException(
-        'disconnect emit Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -120,12 +114,9 @@ export class WebSocketsGateway
             ...finalData,
             type: 'room',
           });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Emit message Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -139,12 +130,9 @@ export class WebSocketsGateway
       socket.join(name);
       console.log(`Client ${socket.id} create room ${name}`);
       this.roomsService.postRoom({ name, creator, members: [creator] });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Emit createRoom Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -167,12 +155,9 @@ export class WebSocketsGateway
         });
       });
       this.roomsService.postRoom({ name, creator, members });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Emit addClientToRooms Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

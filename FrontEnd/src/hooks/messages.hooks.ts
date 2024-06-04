@@ -11,13 +11,11 @@ export const useGetAllMessages = (receiver: { name: string; members: number[] | 
   useEffect(() => {
     setMessages([]);
     const getMessagesReceiver = async () => {
-      let data = await getMessagesReceiverRequest(finalReceiver);
-      if (data) {
+      const data = await getMessagesReceiverRequest(finalReceiver);
+      if (data)
         for (let i = 0; i < data.length; i++) {
           data[i].sender = data[i].sender.name;
         }
-      }
-      console.log(data);
       setMessages((prevMessages) => [...prevMessages, ...data]);
     };
     getMessagesReceiver();

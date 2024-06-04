@@ -38,7 +38,7 @@ export class AuthController {
   }
   @Get('/verify')
   @UseGuards(AuthGuard)
-  verifyUser(@Req() req: any) {
-    return this.usersService.getUser(req.user.user_ID);
+  verifyUser(@Req() req: Request) {
+    return this.usersService.getUser(req['user'].user_ID);
   }
 }

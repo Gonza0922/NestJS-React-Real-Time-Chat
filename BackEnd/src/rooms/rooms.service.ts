@@ -35,12 +35,9 @@ export class RoomsService {
         .addGroupBy('creator')
         .getRawMany();
       return this.formatRooms(findRooms);
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering room by roomName',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -62,12 +59,9 @@ export class RoomsService {
         .addGroupBy('creator')
         .getRawMany();
       return this.formatRooms(findRooms);
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering rooms by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -86,12 +80,9 @@ export class RoomsService {
         });
         return this.roomRepository.save(newRoomCreated);
       });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error creating room',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

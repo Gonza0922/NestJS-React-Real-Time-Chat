@@ -20,12 +20,9 @@ export class ImagesService {
         where: { user_ID },
       });
       return findUser.image;
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering user image by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -44,12 +41,9 @@ export class ImagesService {
         where: { user_ID },
       });
       return { user_ID, newImage: findUserchanged.image };
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error updating user image by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -67,12 +61,9 @@ export class ImagesService {
         { image: process.env.NONE_IMAGE },
       );
       return { message: `Image delete of user ${findUser.name}` };
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error removing user image by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -89,12 +80,9 @@ export class ImagesService {
       if (!findUserChanged)
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       return { room, newImage: findUserChanged.image };
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error updating room image by room',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

@@ -13,12 +13,9 @@ export class UsersService {
   getAllUsers() {
     try {
       return this.userRepository.find({ order: { name: 'ASC' } });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering all users',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -27,38 +24,18 @@ export class UsersService {
       return await this.userRepository.findOne({
         where: { user_ID },
       });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering user by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   async getUserByName(name: string) {
     try {
       return await this.userRepository.findOne({ where: { name } });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering user by name',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async getUserByPassword(password: string) {
-    try {
-      return await this.userRepository.findOne({
-        where: { password },
-      });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error recovering user by password',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -69,12 +46,9 @@ export class UsersService {
         { name: data.name, email: data.email },
       );
       return this.userRepository.findOne({ where: { user_ID } });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error updating user by user_ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

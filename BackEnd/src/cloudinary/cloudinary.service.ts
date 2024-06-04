@@ -15,12 +15,9 @@ export class CloudinaryService {
         });
         streamifier.createReadStream(file.buffer).pipe(upload);
       });
-    } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        'Error uploading File in cloudinary',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
