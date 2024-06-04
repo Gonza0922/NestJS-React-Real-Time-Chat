@@ -3,7 +3,11 @@ import axios from "./axios.ts";
 
 export const getAllMessagesRequest = async () => {
   //Select all messages
-  const request = await axios.get("/messages/getAll");
+  const request = await axios.get("/messages/getAll", {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
   return request.data;
 };
 
