@@ -6,6 +6,8 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './rooms.dto';
@@ -24,6 +26,7 @@ export class RoomsController {
     return this.roomsService.getRoomsByUser(user_ID);
   }
   @Post('/post')
+  @UsePipes(new ValidationPipe())
   createRoomEndpoint(@Body() newRoom: CreateRoomDto) {
     return this.roomsService.postRoom(newRoom);
   }
