@@ -28,7 +28,6 @@ export class MessagesController {
     return this.messagesService.getMessagesByReceiver(req, finalReceiver);
   }
   @Post('/post')
-  @UsePipes(new ValidationPipe())
   createMessageEndpoint(@Body() newMessage: CreateMessageDto) {
     return this.messagesService.postMessage(newMessage);
   }

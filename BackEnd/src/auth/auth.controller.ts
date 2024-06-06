@@ -22,12 +22,10 @@ export class AuthController {
     private usersService: UsersService,
   ) {}
   @Post('/register')
-  @UsePipes(new ValidationPipe())
   registerUser(@Res() res: Response, @Body() newUser: RegisterUserDto) {
     return this.authService.signUp(res, newUser);
   }
   @Post('/login')
-  @UsePipes(new ValidationPipe())
   loginUser(@Res() res: Response, @Body() user: LoginUserDto) {
     return this.authService.signIn(res, user);
   }

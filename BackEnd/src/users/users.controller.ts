@@ -30,7 +30,6 @@ export class UsersController {
     return this.userService.getUserByName(name);
   }
   @Put('/put/:user_ID')
-  @UsePipes(new ValidationPipe())
   putUserEndpoint(
     @Body() data: UpdateUserDto,
     @Param('user_ID', ParseIntPipe) user_ID: number,

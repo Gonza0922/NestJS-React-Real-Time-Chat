@@ -26,7 +26,6 @@ export class RoomsController {
     return this.roomsService.getRoomsByUser(user_ID);
   }
   @Post('/post')
-  @UsePipes(new ValidationPipe())
   createRoomEndpoint(@Body() newRoom: CreateRoomDto) {
     return this.roomsService.postRoom(newRoom);
   }
