@@ -5,6 +5,8 @@ import {
   Post,
   Request,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto, finalReceiverDto } from './messages.dto';
@@ -26,6 +28,7 @@ export class MessagesController {
     return this.messagesService.getMessagesByReceiver(req, finalReceiver);
   }
   @Post('/post')
+  @UsePipes(new ValidationPipe())
   createMessageEndpoint(@Body() newMessage: CreateMessageDto) {
     return this.messagesService.postMessage(newMessage);
   }
