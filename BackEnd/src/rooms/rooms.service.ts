@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Room } from './rooms.entity';
+import { Room } from './entities/rooms.entity';
 import { Repository } from 'typeorm';
-import { CompleteRoomWithMembersInStringDto, CreateRoomDto } from './rooms.dto';
+import {
+  CompleteRoomWithMembersInStringDto,
+  CreateRoomDto,
+} from './dto/rooms.dto';
 
 @Injectable()
 export class RoomsService {

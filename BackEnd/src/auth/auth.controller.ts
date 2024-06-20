@@ -6,10 +6,8 @@ import {
   Req,
   Res,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { LoginUserDto, RegisterUserDto } from '../users/users.dto';
+import { LoginUserDto, RegisterUserDto } from '../users/dto/users.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { UsersService } from 'src/users/users.service';

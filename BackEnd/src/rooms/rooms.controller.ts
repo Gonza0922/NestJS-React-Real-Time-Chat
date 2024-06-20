@@ -6,11 +6,9 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
-import { CreateRoomDto } from './rooms.dto';
+import { CreateRoomDto } from './dto/rooms.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AuthGuard)

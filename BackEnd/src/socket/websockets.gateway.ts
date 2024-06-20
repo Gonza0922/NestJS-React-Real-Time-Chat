@@ -9,10 +9,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from 'src/messages/messages.service';
-import { ClientDto } from './websockets.dto';
+import { ClientDto } from './dto/websockets.dto';
 import { UsersService } from 'src/users/users.service';
 import { RoomsService } from 'src/rooms/rooms.service';
-import { CompleteRoomDto, CreateRoomDto } from 'src/rooms/rooms.dto';
+import { CompleteRoomDto, CreateRoomDto } from 'src/rooms/dto/rooms.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 @WebSocketGateway({ cors: 'http://localhost:5173' })

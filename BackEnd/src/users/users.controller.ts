@@ -6,11 +6,9 @@ import {
   ParseIntPipe,
   Put,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './users.dto';
+import { UpdateUserDto } from './dto/users.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AuthGuard)

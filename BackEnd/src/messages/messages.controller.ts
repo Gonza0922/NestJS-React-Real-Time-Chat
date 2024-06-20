@@ -5,11 +5,9 @@ import {
   Post,
   Request,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
-import { CreateMessageDto, finalReceiverDto } from './messages.dto';
+import { CreateMessageDto, finalReceiverDto } from './dto/messages.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AuthGuard)

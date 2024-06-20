@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/users.entity';
+import { User } from 'src/users/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { destroyImageCloudinary } from 'src/cloudinary/destroyImage.cloudinary';
-import { Room } from 'src/rooms/rooms.entity';
+import { Room } from 'src/rooms/entities/rooms.entity';
 
 @Injectable()
 export class ImagesService {
