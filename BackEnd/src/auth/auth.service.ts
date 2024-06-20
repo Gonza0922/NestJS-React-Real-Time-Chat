@@ -17,8 +17,8 @@ export class AuthService {
   async signUp(res: Response, newUser: RegisterUserDto) {
     try {
       const { email, password } = newUser;
-      const findEmail = await this.userRepository.find({ where: { email } });
-      if (findEmail.length > 0)
+      const findEmail = await this.userRepository.findOne({ where: { email } });
+      if (findEmail)
         throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
       const hashedPassword = await bcrypt.hash(password, 10);
       const userCreated = this.userRepository.create({
@@ -39,15 +39,15 @@ export class AuthService {
   async signIn(res: Response, user: LoginUserDto) {
     try {
       const { email, password } = user;
-      const findUser = await this.userRepository.find({ where: { email } });
-      if (findUser.length === 0)
+      const findUser = await this.userRepository.findOne({ where: { email } });
+      if (!findUser)
         throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-      const isMatch = await bcrypt.compare(password, findUser[0].password);
+      const isMatch = await bcrypt.compare(password, findUser.password);
       if (!isMatch)
         throw new HttpException('Incorrect Password', HttpStatus.BAD_REQUEST);
-      const payload = { user_ID: findUser[0].user_ID };
+      const payload = { user_ID: findUser.user_ID };
       const UserToken = await this.jwtService.signAsync(payload);
-      res.status(200).json({ user: findUser[0], token: UserToken });
+      res.status(200).json({ user: findUser, token: UserToken });
     } catch (error) {
       console.error(error);
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
