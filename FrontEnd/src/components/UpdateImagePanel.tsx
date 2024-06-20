@@ -26,7 +26,7 @@ function UpdateImagePanel() {
   const handleImageDelete = () => {
     setUpdateProfile({
       ...updateProfile,
-      url: "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1715833977/user-not-image_c8itqn.webp",
+      url: import.meta.env.VITE_NONE_IMAGE,
     });
     deleteImageRequest(user.user_ID);
     setPanel("chats");

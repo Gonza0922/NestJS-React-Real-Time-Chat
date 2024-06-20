@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterUserDto } from 'src/users/users.dto';
+import { RegisterUserDto } from 'src/users/dto/users.dto';
 import { v2 as cloudinary } from 'cloudinary';
 
 export const destroyImageCloudinary = async (findUser: RegisterUserDto) => {

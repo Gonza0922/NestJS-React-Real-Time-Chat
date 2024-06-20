@@ -6,8 +6,7 @@ import { useGetAllUsers } from "../hooks/users.hooks.ts";
 import { putRoomImageRequest } from "../api/images.api.ts";
 
 function CreateRoom() {
-  const roomDefaultImage =
-    "https://res.cloudinary.com/dz5q0a2nd/image/upload/v1716411818/group-default-profile_f8ynlj.jpg";
+  const roomDefaultImage = import.meta.env.VITE_ROOM_NONE_IMAGE;
   const { user, setError, error } = useUserContext();
   const { setPanel, scrollRef, socket, room, setRoom } = useSocketContext();
   const { users } = useGetAllUsers(user.name);

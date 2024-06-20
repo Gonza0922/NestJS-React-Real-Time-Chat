@@ -1,13 +1,13 @@
 import axios from "./axios.ts";
-import { LoginUserDto, RegisterUserDto } from "../../../BackEnd/src/users/users.dto.ts";
+import { LoginData, RegisterData } from "../interfaces/user.interfaces.ts";
 
-export const registerUserRequest = async (user: RegisterUserDto) => {
+export const registerUserRequest = async (user: RegisterData) => {
   //Register a new user
   const request = await axios.post("/auth/register", user);
   return request.data;
 };
 
-export const loginUserRequest = async (user: LoginUserDto) => {
+export const loginUserRequest = async (user: LoginData) => {
   //Log in a user that matches the data sent
   const request = await axios.post("/auth/login", user);
   return request.data;
