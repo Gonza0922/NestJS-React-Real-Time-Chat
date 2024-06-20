@@ -41,19 +41,22 @@ function Chat() {
           >
             Chats
           </span>
-          <span className="button-set-rooms" onClick={() => setPanel("Rooms")}>
-            Rooms
-          </span>
           <img
             onClick={() => setPanel("image")}
             className="profile-image-mini"
             src={updateProfile.url}
             alt="profile Image"
           />
+          <img
+            onClick={() => setPanel("rooms")}
+            className="rooms-image-mini"
+            src={import.meta.env.VITE_ROOM_NONE_IMAGE}
+            alt="rooms Image"
+          />
         </nav>
         {panel === "chats" ? (
           <ChatsPanel />
-        ) : panel === "Rooms" ? (
+        ) : panel === "rooms" ? (
           <CreateRoom />
         ) : (
           <UpdateImagePanel />

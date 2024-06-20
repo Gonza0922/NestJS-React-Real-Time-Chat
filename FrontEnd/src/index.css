@@ -232,7 +232,8 @@ body {
   margin-left: 8px;
 }
 
-.profile-image-mini {
+.profile-image-mini,
+.rooms-image-mini {
   width: 40px;
   height: 40px;
   object-fit: cover;
@@ -240,6 +241,10 @@ body {
   float: right;
   cursor: pointer;
   transform: translateY(-4px);
+}
+
+.rooms-image-mini {
+  margin-right: 10px;
 }
 
 .span-chats {
