@@ -91,7 +91,7 @@ const SocketProvider = (props: ChildrenType) => {
         socket.off("getOnlineUsers", (names: string[]) => setConectedUsers(names));
       };
     }
-  }, [isAuthenticated]);
+  }, [socket]);
 
   useEffect(() => {
     if (socket) {
