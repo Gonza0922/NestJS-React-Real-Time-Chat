@@ -62,3 +62,13 @@ cd NestJS-React-Real-Time-Chat
 npm install
 npm run dev
 ```
+
+## API Documentation
+
+This project uses Swagger to generate the API documentation. Swagger provides a interface to explore and test the API endpoints.
+
+### Accessing the API Documentation
+
+- Ensure the backend server is running.
+- Open your web browser and navigate to the following URL: http://localhost:3000/api-docs
+- You should see the Swagger UI with the complete documentation of the API.
