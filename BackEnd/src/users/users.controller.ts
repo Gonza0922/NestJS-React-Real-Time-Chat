@@ -10,7 +10,10 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/users.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {

@@ -12,7 +12,10 @@ import {
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('images')
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('images')
 export class ImagesController {

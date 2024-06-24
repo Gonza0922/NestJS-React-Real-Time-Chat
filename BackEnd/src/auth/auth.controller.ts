@@ -12,7 +12,9 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { Response } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -27,11 +29,13 @@ export class AuthController {
   loginUser(@Res() res: Response, @Body() user: LoginUserDto) {
     return this.authService.signIn(res, user);
   }
+  @ApiBearerAuth()
   @Post('/logout')
   @UseGuards(AuthGuard)
   logoutUser(@Res() res: Response) {
     return this.authService.signOut(res);
   }
+  @ApiBearerAuth()
   @Get('/verify')
   @UseGuards(AuthGuard)
   verifyUser(@Req() req: Request) {

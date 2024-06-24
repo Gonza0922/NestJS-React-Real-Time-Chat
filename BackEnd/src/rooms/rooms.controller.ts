@@ -10,7 +10,10 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/rooms.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('rooms')
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('rooms')
 export class RoomsController {

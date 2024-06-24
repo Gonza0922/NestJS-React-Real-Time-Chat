@@ -27,6 +27,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.3.8",
     "@nestjs/platform-socket.io": "^10.3.7",
+    "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.3.7",
     "@types/multer": "^1.4.11",
