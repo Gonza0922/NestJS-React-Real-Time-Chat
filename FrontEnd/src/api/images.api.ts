@@ -19,7 +19,7 @@ export const putImageRequest = async (user_ID: number, file: File) => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const putRoomImageRequest = async (roomName: string, file: File) => {
   const formData = new FormData();
@@ -31,7 +31,7 @@ export const putRoomImageRequest = async (roomName: string, file: File) => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const deleteImageRequest = async (user_ID: number) => {
   const request = await axios.delete(`/images/delete/${user_ID}`, {
@@ -40,4 +40,4 @@ export const deleteImageRequest = async (user_ID: number) => {
     },
   });
   return request.data;
-};
+}; //[USED]

@@ -5,13 +5,13 @@ export const registerUserRequest = async (user: RegisterData) => {
   //Register a new user
   const request = await axios.post("/auth/register", user);
   return request.data;
-};
+}; //[USED]
 
 export const loginUserRequest = async (user: LoginData) => {
   //Log in a user that matches the data sent
   const request = await axios.post("/auth/login", user);
   return request.data;
-};
+}; //[USED]
 
 export const logoutUserRequest = async () => {
   //Log out a user
@@ -25,7 +25,7 @@ export const logoutUserRequest = async () => {
     }
   );
   return request.data;
-};
+}; //[USED]
 
 export const verifyTokenUserRequest = async () => {
   //Check if the UserToken exists/matches to enter the user account
@@ -35,4 +35,4 @@ export const verifyTokenUserRequest = async () => {
     },
   });
   return request.data;
-};
+}; //[USED]

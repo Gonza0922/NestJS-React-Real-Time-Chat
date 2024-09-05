@@ -8,7 +8,7 @@ export const getAllUsersRequest = async () => {
     },
   });
   return request.data;
-};
+}; //[USED 2]
 
 export const getUserIdRequest = async (user_ID: number) => {
   //Select the user that matches the user_ID sent by parameter
@@ -18,4 +18,4 @@ export const getUserIdRequest = async (user_ID: number) => {
     },
   });
   return request.data;
-};
+}; //[USED]

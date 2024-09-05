@@ -9,7 +9,7 @@ export const getRoomByNameRequest = async (roomName: string) => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const getRoomsByUserRequest = async (user_ID: number) => {
   //Select Room By User
@@ -19,7 +19,7 @@ export const getRoomsByUserRequest = async (user_ID: number) => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const postRoomRequest = async (dataRoom: CreateRoom) => {
   //Create a room

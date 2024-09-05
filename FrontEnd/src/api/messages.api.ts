@@ -9,7 +9,7 @@ export const getAllMessagesRequest = async () => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const getMessagesReceiverRequest = async (finalReceiver: object) => {
   //Select all messages from a sender and receiverObject
@@ -19,7 +19,7 @@ export const getMessagesReceiverRequest = async (finalReceiver: object) => {
     },
   });
   return request.data;
-};
+}; //[USED]
 
 export const postMessagesRequest = async (newData: Message) => {
   //Create a message
