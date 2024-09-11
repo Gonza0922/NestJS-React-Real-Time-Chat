@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterUserDto } from 'src/users/dto/users.dto';
 import { v2 as cloudinary } from 'cloudinary';
+import { UserImageDto } from './dto/images.dto';
 
-export const destroyImageCloudinary = async (findUser: RegisterUserDto) => {
+export const destroyImageCloudinary = async (findUser: UserImageDto) => {
   if (findUser === undefined)
     throw new HttpException(
       'There is no image to delete',
