@@ -50,7 +50,7 @@ export class WebSocketsGateway
     try {
       const { userName } = socket.handshake.auth;
       if (userName) {
-        console.log(`${socket.id} Disconnected`);
+        console.log(`${userName} with id: ${socket.id} Disconnected `);
         this.clients.filter((client) => client.id !== socket.id);
         const user = await this.usersService.getUser(userName);
         this.usersHandle = this.usersHandle.filter(

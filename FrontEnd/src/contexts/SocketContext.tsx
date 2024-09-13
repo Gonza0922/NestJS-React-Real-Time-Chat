@@ -57,6 +57,9 @@ const SocketProvider = (props: ChildrenType) => {
       auth: { userName: user.user_ID, receiverName: userToSend },
     });
     setSocket(socket);
+    return () => {
+      socket.disconnect();
+    };
   }, [userToSend, isAuthenticated]);
 
   useEffect(() => {
