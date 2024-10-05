@@ -59,7 +59,6 @@ function MessagesContainer() {
           message.sender === user.name ? (
             <div key={index} className="right">
               <span className="sender">
-                {message.sender}
                 <span className="hour">{getDateAndHours(message.createdAt)}</span>
               </span>
               <p className="content">{message.content}</p>
@@ -80,6 +79,7 @@ function MessagesContainer() {
       <form className="chat-form" onSubmit={textHandleSubmit}>
         <input
           className="input-chat"
+          placeholder="Message"
           id="input"
           value={text}
           type="text"
