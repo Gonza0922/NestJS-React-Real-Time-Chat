@@ -30,10 +30,10 @@ This project is a real-time chat created to demonstrate my fullstack skills and 
   cd BackEnd
   ```
 
-- Copy the ".env.example" file to ".env"
+- Copy the ".env.template" file to ".env"
 
   ```
-  cp .env.example .env
+  cp .env.template .env
   ```
 
 - Finally open the ".env" file and set the required variables.
@@ -46,10 +46,10 @@ This project is a real-time chat created to demonstrate my fullstack skills and 
   cd FrontEnd
   ```
 
-- Copy the ".env.example" file to ".env"
+- Copy the ".env.template" file to ".env"
 
   ```
-  cp .env.example .env
+  cp .env.template .env
   ```
 
 - Finally open the ".env" file and set the required variables. (variables should start with "VITE")
