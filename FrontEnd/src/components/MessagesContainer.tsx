@@ -20,6 +20,8 @@ function MessagesContainer() {
   } = useSocketContext();
   const [text, setText] = useState("");
 
+  const hasRoomMembers = roomMembers.length > 0;
+
   const textHandleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.trim()) {
@@ -39,14 +41,14 @@ function MessagesContainer() {
 
   return (
     <div className="container">
-      {roomMembers.length > 0 ? (
+      {hasRoomMembers ? (
         <>
           <nav className="navbar-chat-with-members">{userToSend}</nav>
           <div className="container-members">
             {roomMembers.map((member: RegisterData, index: number) => (
               <span key={index} className="sender-content">
                 {member.name}
-                {roomMembers.length !== index + 1 ? ", " : ""}
+                {roomMembers.length !== index + 1 ? ", " : null}
               </span>
             ))}
           </div>
@@ -55,26 +57,22 @@ function MessagesContainer() {
         <nav className="navbar-chat">{userToSend}</nav>
       )}
       <div className="screen" ref={scrollRef}>
-        {messages.map((message: SenderStringMessage, index: number) =>
-          message.sender === user.name ? (
-            <div key={index} className="right">
+        {messages.map((message: SenderStringMessage, index: number) => {
+          const isSender = message.sender === user.name;
+          const isReceiver = message.sender === userToSend || message.receiverName === userToSend;
+
+          if (!isSender && !isReceiver) return null;
+
+          return (
+            <div key={index} className={isSender ? "right" : "left"}>
               <span className="sender">
+                {hasRoomMembers && !isSender ? message.sender : null}
                 <span className="hour">{getDateAndHours(message.createdAt)}</span>
               </span>
               <p className="content">{message.content}</p>
             </div>
-          ) : message.sender === userToSend || message.receiverName === userToSend ? (
-            <div key={index} className="left">
-              <span className="sender">
-                {roomMembers.length > 0 ? message.sender : ""}
-                <span className="hour">{getDateAndHours(message.createdAt)}</span>
-              </span>
-              <p className="content">{message.content}</p>
-            </div>
-          ) : (
-            ""
-          )
-        )}
+          );
+        })}
       </div>
       <form className="chat-form" onSubmit={textHandleSubmit}>
         <input
