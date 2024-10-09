@@ -66,7 +66,7 @@ function MessagesContainer() {
           ) : message.sender === userToSend || message.receiverName === userToSend ? (
             <div key={index} className="left">
               <span className="sender">
-                {message.sender}
+                {roomMembers.length > 0 ? message.sender : ""}
                 <span className="hour">{getDateAndHours(message.createdAt)}</span>
               </span>
               <p className="content">{message.content}</p>
