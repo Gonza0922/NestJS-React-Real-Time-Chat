@@ -8,6 +8,7 @@ function UpdateImagePanel() {
 
   const handleUpdateProfile = () => {
     if (updateProfile.image !== user.image) putImageRequest(user.user_ID, updateProfile.image);
+    setUpdateProfile({ ...updateProfile, image: null });
     setPanel("chats");
   };
 

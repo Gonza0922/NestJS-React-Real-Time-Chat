@@ -34,7 +34,8 @@ function Chat() {
         <nav className="chats-navbar">
           <span
             onClick={() => {
-              setUpdateProfile({ ...updateProfile, url: user.image, image: user.image });
+              if (updateProfile.image !== null)
+                setUpdateProfile({ ...updateProfile, url: user.image, image: user.image });
               setPanel("chats");
             }}
             className="span-chats"
