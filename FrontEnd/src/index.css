@@ -422,17 +422,21 @@ body {
 }
 /* CHAT NONE */
 
+.container,
 .container-none {
-  min-width: 380px;
+  width: 850px;
+  min-width: 550px;
   background-color: #51535e44;
+  margin: 20px;
+  margin-top: 100px;
+  height: 815px;
+}
+
+.container-none {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 850px;
-  height: 815px;
-  margin: 20px;
-  margin-top: 100px;
 }
 
 .update-profile {
@@ -463,14 +467,6 @@ body {
   position: absolute;
   margin-left: 20px;
   transform: translateY(-28px);
-}
-
-.container {
-  width: 850px;
-  min-width: 380px;
-  margin: 20px;
-  margin-top: 100px;
-  background-color: #51535e44;
 }
 
 .screen {
